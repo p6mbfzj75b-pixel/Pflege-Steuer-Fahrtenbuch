@@ -2,1183 +2,1218 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
->
-<meta
-    name="theme-color"
-    content="#d41475"
->
-<meta
-    name="apple-mobile-web-app-capable"
-    content="yes"
->
-<meta
-    name="apple-mobile-web-app-status-bar-style"
-    content="default"
->
-<meta
-    name="apple-mobile-web-app-title"
-    content="Oma-Fahrtenbuch"
->
-<title>Oma-Fahrtenbuch 🌸</title>
-<!--
-    Für die PWA-Installation:
-    Diese Datei muss später zusammen mit manifest.json
-    und service-worker.js auf derselben Website liegen.
--->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#d41475">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Oma-Fahrtenbuch">
+
+<title>Oma-Fahrtenbuch</title>
+
 <link rel="manifest" href="manifest.json">
+
 <style>
 :root {
     --bg: #fff7fb;
     --card: #ffffff;
-    --text: #351d2d;
-    --muted: #8a687c;
+    --text: #3b2632;
+    --muted: #8a6878;
     --primary: #d41475;
-    --primary-dark: #ad0e5f;
-    --secondary: #f7d4e7;
-    --border: #edc8dc;
-    --success: #4caf7d;
-    --danger: #d94b6a;
-    --input: #fffafd;
-    --shadow: 0 8px 25px rgba(160, 35, 100, 0.10);
+    --primary-dark: #a80d5a;
+    --secondary: #f7d5e7;
+    --border: #edd5e1;
+    --danger: #d64545;
+    --success: #319b65;
+    --shadow: 0 8px 25px rgba(120, 30, 80, 0.10);
 }
+
 body.dark {
-    --bg: #0d1724;
-    --card: #142538;
-    --text: #edf7ff;
-    --muted: #8eabc0;
-    --primary: #54c9ff;
-    --primary-dark: #2db2ed;
-    --secondary: #1c3b55;
-    --border: #28506c;
-    --success: #55d69b;
-    --danger: #ff6b8a;
-    --input: #102030;
-    --shadow: 0 8px 25px rgba(0,0,0,0.25);
+    --bg: #101b2b;
+    --card: #18283d;
+    --text: #edf5ff;
+    --muted: #9eb2c9;
+    --primary: #55b8ff;
+    --primary-dark: #3197df;
+    --secondary: #243c58;
+    --border: #304b68;
+    --danger: #ff6b6b;
+    --success: #55c98b;
+    --shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
 }
+
 * {
     box-sizing: border-box;
 }
+
 body {
     margin: 0;
-    padding: 20px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     background: var(--bg);
     color: var(--text);
-    font-family:
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        Roboto,
-        Arial,
-        sans-serif;
-    transition: 0.25s ease;
+    transition: 0.25s;
 }
-.app {
+
+button,
+input,
+select {
+    font: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+header {
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    padding: 20px;
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    box-shadow: 0 3px 15px rgba(0,0,0,0.05);
+}
+
+.header-inner {
     max-width: 1200px;
     margin: auto;
-}
-/* =====================================================
-   HEADER
-===================================================== */
-header {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    justify-content: space-between;
     gap: 15px;
-    margin-bottom: 20px;
 }
-.title-area h1 {
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logo-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--primary);
+    color: white;
+    font-size: 25px;
+}
+
+.logo h1 {
     margin: 0;
-    font-size: 28px;
+    font-size: 21px;
 }
-.title-area p {
-    margin: 5px 0 0;
+
+.logo p {
+    margin: 2px 0 0;
     color: var(--muted);
-    font-size: 14px;
+    font-size: 13px;
 }
+
 .header-buttons {
     display: flex;
     gap: 8px;
-    flex-wrap: wrap;
 }
-.theme-button,
-.install-button {
+
+.icon-btn {
     border: 1px solid var(--border);
     background: var(--card);
     color: var(--text);
     border-radius: 12px;
-    padding: 10px 14px;
-    cursor: pointer;
-    font-size: 14px;
-    box-shadow: var(--shadow);
+    width: 43px;
+    height: 43px;
+    font-size: 19px;
 }
-.install-button {
-    background: var(--primary);
-    color: white;
-    border-color: var(--primary);
+
+.container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 25px 18px 60px;
 }
-/* =====================================================
-   LEVEL
-===================================================== */
-.level-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 18px;
-    padding: 20px;
-    margin-bottom: 20px;
-    box-shadow: var(--shadow);
-}
-.level-top {
+
+.top-controls {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 15px;
-}
-.level-title {
-    display: flex;
-    align-items: center;
     gap: 12px;
-}
-.level-emoji {
-    font-size: 38px;
-}
-.level-small {
-    color: var(--muted);
-    font-size: 12px;
-    margin-bottom: 3px;
-}
-.level-name {
-    font-size: 21px;
-    font-weight: 800;
-    color: var(--primary);
-}
-.level-number {
-    font-size: 14px;
-    color: var(--muted);
-    font-weight: 600;
-}
-.progress-container {
-    margin-top: 16px;
-}
-.progress-info {
-    display: flex;
-    justify-content: space-between;
-    font-size: 12px;
-    color: var(--muted);
-    margin-bottom: 6px;
-}
-.progress-bar {
-    width: 100%;
-    height: 12px;
-    background: var(--secondary);
-    border-radius: 20px;
-    overflow: hidden;
-}
-.progress-fill {
-    height: 100%;
-    width: 0%;
-    background: var(--primary);
-    border-radius: 20px;
-    transition: width 0.6s ease;
-}
-/* =====================================================
-   JAHR / FILTER
-===================================================== */
-.filter-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 18px;
-    padding: 18px;
+    flex-wrap: wrap;
     margin-bottom: 20px;
-    box-shadow: var(--shadow);
 }
-.filter-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
+
+.control-group {
+    flex: 1;
+    min-width: 180px;
 }
-.filter-box label {
+
+label {
     display: block;
-    color: var(--muted);
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 700;
     margin-bottom: 6px;
+    color: var(--muted);
 }
-/* =====================================================
-   SUMMARY
-===================================================== */
+
+select,
+input[type="text"],
+input[type="number"] {
+    width: 100%;
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--text);
+    border-radius: 11px;
+    padding: 12px 13px;
+    outline: none;
+}
+
+select:focus,
+input:focus {
+    border-color: var(--primary);
+}
+
 .summary {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 15px;
-    margin-bottom: 20px;
+    gap: 14px;
+    margin-bottom: 22px;
 }
+
 .summary-card {
     background: var(--card);
     border: 1px solid var(--border);
-    border-radius: 16px;
+    border-radius: 18px;
     padding: 18px;
     box-shadow: var(--shadow);
 }
+
+.summary-icon {
+    font-size: 23px;
+}
+
 .summary-label {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 7px;
+}
+
+.summary-value {
+    font-size: 25px;
+    font-weight: 800;
+    margin-top: 3px;
+}
+
+.card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 22px;
+    margin-bottom: 22px;
+    box-shadow: var(--shadow);
+}
+
+.card h2 {
+    margin: 0 0 5px;
+    font-size: 20px;
+}
+
+.card-description {
     color: var(--muted);
     font-size: 13px;
-    margin-bottom: 7px;
-}
-.summary-value {
-    font-size: 24px;
-    font-weight: 700;
-    color: var(--primary);
-}
-/* =====================================================
-   FORM
-===================================================== */
-.form-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 18px;
-    padding: 20px;
-    box-shadow: var(--shadow);
     margin-bottom: 20px;
 }
-.form-card h2 {
-    margin: 0 0 16px;
-    font-size: 19px;
+
+.route-box {
+    background: var(--secondary);
+    border-radius: 15px;
+    padding: 16px;
+    margin-bottom: 20px;
 }
+
+.route-title {
+    font-size: 12px;
+    color: var(--muted);
+    font-weight: 700;
+    margin-bottom: 7px;
+}
+
+.route-preview {
+    font-weight: 700;
+    line-height: 1.6;
+    word-break: break-word;
+}
+
+.route-arrow {
+    color: var(--primary);
+    margin: 0 5px;
+}
+
 .form-grid {
     display: grid;
-    grid-template-columns:
-        1fr
-        1fr
-        1.2fr
-        120px
-        130px;
-    gap: 12px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+}
+
+.form-field {
+    min-width: 0;
+}
+
+.km-row {
+    display: grid;
+    grid-template-columns: 1fr 150px;
+    gap: 10px;
     align-items: end;
+    margin-bottom: 14px;
 }
-label {
-    display: block;
-    font-size: 12px;
-    font-weight: 600;
+
+.km-label {
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.km-hint {
+    font-size: 11px;
     color: var(--muted);
-    margin-bottom: 6px;
+    margin-top: 4px;
 }
-input,
-select {
-    width: 100%;
-    height: 44px;
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 0 12px;
-    background: var(--input);
+
+.toggle-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 18px 0;
+}
+
+.toggle-row input {
+    width: 20px;
+    height: 20px;
+    accent-color: var(--primary);
+}
+
+.toggle-row label {
+    margin: 0;
     color: var(--text);
-    outline: none;
     font-size: 14px;
 }
-input:focus,
-select:focus {
-    border-color: var(--primary);
+
+.actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
 }
-.add-button {
-    height: 44px;
+
+.primary-btn {
     border: none;
-    border-radius: 10px;
     background: var(--primary);
     color: white;
-    font-weight: 700;
-    cursor: pointer;
-    padding: 0 18px;
-    transition: 0.2s;
+    border-radius: 12px;
+    padding: 13px 20px;
+    font-weight: 800;
 }
-.add-button:hover {
+
+.primary-btn:hover {
     background: var(--primary-dark);
-    transform: translateY(-1px);
 }
-/* =====================================================
-   TABLE
-===================================================== */
-.table-card {
+
+.secondary-btn {
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--text);
+    border-radius: 12px;
+    padding: 13px 18px;
+    font-weight: 700;
+}
+
+.danger-btn {
+    border: none;
+    background: var(--danger);
+    color: white;
+    border-radius: 10px;
+    padding: 9px 13px;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.route-total {
+    margin-top: 18px;
+    padding: 15px;
     background: var(--card);
     border: 1px solid var(--border);
-    border-radius: 18px;
-    box-shadow: var(--shadow);
-    overflow: hidden;
-}
-.table-header {
+    border-radius: 14px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 18px 20px;
-    gap: 10px;
+    gap: 15px;
 }
-.table-header h2 {
-    margin: 0;
+
+.route-total strong {
     font-size: 19px;
 }
-.actions {
+
+.route-total-cost {
+    color: var(--primary);
+    font-weight: 800;
+}
+
+.level-card {
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white;
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 22px;
+    box-shadow: var(--shadow);
+}
+
+.level-top {
     display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 15px;
+    align-items: center;
 }
-.secondary-button {
-    border: 1px solid var(--border);
-    background: var(--card);
-    color: var(--text);
-    border-radius: 10px;
-    padding: 9px 12px;
-    cursor: pointer;
+
+.level-name {
+    font-size: 21px;
+    font-weight: 800;
+}
+
+.level-number {
     font-size: 13px;
+    opacity: 0.85;
 }
-.secondary-button:hover {
-    border-color: var(--primary);
+
+.progress-container {
+    height: 10px;
+    background: rgba(255,255,255,0.25);
+    border-radius: 20px;
+    overflow: hidden;
+    margin-top: 15px;
 }
-.danger-button:hover {
-    border-color: var(--danger);
-    color: var(--danger);
+
+.progress-bar {
+    height: 100%;
+    background: white;
+    border-radius: 20px;
+    transition: width 0.5s;
 }
+
+.level-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    margin-top: 7px;
+    opacity: 0.9;
+}
+
 .table-wrapper {
     overflow-x: auto;
 }
+
 table {
     width: 100%;
     border-collapse: collapse;
     min-width: 850px;
 }
-th,
-td {
-    text-align: left;
-    padding: 12px 15px;
-    border-top: 1px solid var(--border);
-    font-size: 13px;
-}
+
 th {
+    text-align: left;
+    font-size: 12px;
+    color: var(--muted);
+    padding: 12px 10px;
+    border-bottom: 2px solid var(--border);
+}
+
+td {
+    padding: 13px 10px;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+    vertical-align: top;
+}
+
+.route-cell {
+    font-weight: 700;
+    line-height: 1.5;
+}
+
+.route-small {
     color: var(--muted);
     font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    background: var(--secondary);
+    font-weight: 500;
 }
-td strong {
-    color: var(--primary);
-}
-.delete-btn {
-    border: none;
-    background: transparent;
-    color: var(--danger);
-    cursor: pointer;
-    font-size: 18px;
-}
+
 .empty {
     text-align: center;
     color: var(--muted);
-    padding: 35px;
+    padding: 35px 15px;
 }
-/* =====================================================
-   BACKUP / EXPORT
-===================================================== */
-.tools-card {
-    margin-top: 20px;
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 18px;
-    padding: 20px;
-    box-shadow: var(--shadow);
+
+.settings-section {
+    margin-bottom: 25px;
 }
-.tools-card h2 {
-    margin: 0 0 6px;
-    font-size: 18px;
+
+.settings-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 12px 0;
 }
-.tools-card > p {
-    color: var(--muted);
-    font-size: 13px;
-    margin-top: 0;
-}
-.tool-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-}
-.tool-button {
-    min-height: 48px;
-    border: 1px solid var(--border);
-    background: var(--input);
-    color: var(--text);
-    border-radius: 12px;
-    cursor: pointer;
-    padding: 10px 14px;
-    text-align: left;
-}
-.tool-button:hover {
-    border-color: var(--primary);
-}
-/* =====================================================
-   SETTINGS
-===================================================== */
-.settings {
-    margin-top: 20px;
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 18px;
-    padding: 20px;
-    box-shadow: var(--shadow);
-}
-.settings h2 {
-    margin: 0 0 6px;
-    font-size: 18px;
-}
-.settings > p {
-    margin: 0 0 15px;
-    color: var(--muted);
-    font-size: 13px;
-}
-.dropdown-editor {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
-}
-.editor-box {
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 14px;
-}
-.editor-box h3 {
-    margin: 0 0 10px;
-    font-size: 14px;
-}
-.option-list {
-    margin-bottom: 10px;
-}
-.option-item {
+
+.tag {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 8px;
-    padding: 6px 0;
-    border-bottom: 1px solid var(--border);
+    gap: 5px;
+    background: var(--secondary);
+    border-radius: 20px;
+    padding: 7px 11px;
     font-size: 13px;
 }
-.remove-option {
+
+.tag button {
     border: none;
-    background: transparent;
+    background: none;
     color: var(--danger);
-    cursor: pointer;
+    font-weight: 900;
+    padding: 0;
 }
-.add-option {
+
+.add-row {
     display: flex;
-    gap: 6px;
+    gap: 8px;
 }
-.add-option input {
-    height: 38px;
+
+.add-row input {
+    flex: 1;
 }
-.add-option button {
-    border: none;
-    background: var(--primary);
-    color: white;
-    border-radius: 8px;
-    padding: 0 12px;
-    cursor: pointer;
+
+.hidden {
+    display: none !important;
 }
-/* =====================================================
-   POPUPS
-===================================================== */
-#motivationContainer {
+
+.modal-overlay {
     position: fixed;
     inset: 0;
-    pointer-events: none;
-    z-index: 9999;
-    overflow: hidden;
-}
-.motivation-popup {
-    position: absolute;
-    background: var(--card);
-    color: var(--text);
-    border: 2px solid var(--primary);
-    border-radius: 18px;
-    padding: 15px 20px;
-    max-width: 320px;
-    box-shadow: 0 12px 35px rgba(0,0,0,0.18);
-    font-size: 15px;
-    font-weight: 700;
-    text-align: center;
-    animation:
-        popupIn 0.35s ease-out,
-        popupOut 0.5s ease-in 3.8s forwards;
-}
-.motivation-popup .emoji {
-    display: block;
-    font-size: 27px;
-    margin-bottom: 5px;
-}
-@keyframes popupIn {
-    0% {
-        opacity: 0;
-        transform: scale(0.6) translateY(20px);
-    }
-    70% {
-        transform: scale(1.05) translateY(-3px);
-    }
-    100% {
-        opacity: 1;
-        transform: scale(1) translateY(0);
-    }
-}
-@keyframes popupOut {
-    to {
-        opacity: 0;
-        transform: translateY(-25px) scale(0.95);
-    }
-}
-/* =====================================================
-   LEVEL-UP
-===================================================== */
-.level-up-popup {
-    position: fixed;
-    inset: 0;
+    background: rgba(0,0,0,0.5);
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(0,0,0,0.45);
-    z-index: 10000;
+    z-index: 100;
+    padding: 20px;
 }
-.level-up-box {
+
+.modal {
+    width: min(480px, 100%);
     background: var(--card);
     color: var(--text);
-    width: min(90%, 430px);
-    padding: 30px;
-    border-radius: 25px;
+    border-radius: 22px;
+    padding: 28px;
     text-align: center;
-    border: 3px solid var(--primary);
     box-shadow: 0 20px 70px rgba(0,0,0,0.3);
-    animation: levelUp 0.5s cubic-bezier(.17,.67,.32,1.4);
 }
-.level-up-box .big-emoji {
-    font-size: 65px;
+
+.modal-icon {
+    font-size: 50px;
+    margin-bottom: 10px;
 }
-.level-up-box h2 {
-    margin: 10px 0 5px;
-    font-size: 25px;
-    color: var(--primary);
+
+.modal h2 {
+    margin: 0 0 8px;
 }
-.level-up-box p {
+
+.modal p {
     color: var(--muted);
-    margin-bottom: 20px;
+    line-height: 1.5;
 }
-.level-up-close {
-    border: none;
-    background: var(--primary);
-    color: white;
-    padding: 11px 22px;
-    border-radius: 10px;
+
+.popup {
+    position: fixed;
+    right: 25px;
+    bottom: 25px;
+    max-width: 340px;
+    background: var(--card);
+    color: var(--text);
+    border: 2px solid var(--primary);
+    border-radius: 17px;
+    padding: 15px 18px;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.2);
+    z-index: 90;
+    animation: popupIn 0.35s ease;
     font-weight: 700;
-    cursor: pointer;
 }
-@keyframes levelUp {
-    0% {
+
+@keyframes popupIn {
+    from {
+        transform: translateY(20px);
         opacity: 0;
-        transform: scale(0.5) rotate(-5deg);
     }
-    70% {
-        transform: scale(1.05) rotate(1deg);
-    }
-    100% {
+    to {
+        transform: translateY(0);
         opacity: 1;
-        transform: scale(1) rotate(0);
     }
 }
-/* =====================================================
-   PRINT
-===================================================== */
+
+footer {
+    text-align: center;
+    color: var(--muted);
+    font-size: 12px;
+    margin-top: 30px;
+}
+
+@media (max-width: 800px) {
+    .summary {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .km-row {
+        grid-template-columns: 1fr 120px;
+    }
+
+    .header-inner {
+        align-items: flex-start;
+    }
+
+    .logo h1 {
+        font-size: 18px;
+    }
+}
+
+@media (max-width: 500px) {
+    .container {
+        padding: 18px 12px 45px;
+    }
+
+    header {
+        padding: 13px;
+    }
+
+    .summary {
+        gap: 9px;
+    }
+
+    .summary-card {
+        padding: 14px;
+    }
+
+    .summary-value {
+        font-size: 21px;
+    }
+
+    .card {
+        padding: 17px;
+        border-radius: 17px;
+    }
+
+    .route-total {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .popup {
+        left: 15px;
+        right: 15px;
+        bottom: 15px;
+        max-width: none;
+    }
+}
+
 @media print {
     body {
         background: white !important;
         color: black !important;
-        padding: 0;
     }
-    .app {
-        max-width: none;
-    }
+
     header,
-    .level-card,
-    .filter-card,
-    .form-card,
-    .tools-card,
-    .settings,
-    .footer-note,
+    .top-controls,
+    .new-trip-card,
+    .settings-card,
     .actions,
-    .delete-btn,
-    #motivationContainer {
+    footer,
+    .level-card,
+    .delete-col {
         display: none !important;
     }
-    .summary {
-        grid-template-columns: repeat(4, 1fr);
+
+    .container {
+        max-width: none;
+        padding: 0;
     }
-    .summary-card,
-    .table-card {
+
+    .card {
         box-shadow: none;
-        border: 1px solid #ccc;
+        border: none;
     }
-    .table-card {
-        display: block;
+
+    .summary {
+        display: grid;
     }
-    .table-wrapper {
-        overflow: visible;
-    }
+
     table {
         min-width: 0;
     }
+
     th,
     td {
         color: black !important;
-        border-color: #ccc;
+        border-color: #ccc !important;
     }
-    th {
-        background: #eee !important;
+
+    .route-small {
+        color: #555 !important;
     }
-    .print-title {
-        display: block !important;
-        font-size: 24px;
-        margin-bottom: 20px;
-    }
-}
-.print-title {
-    display: none;
-}
-/* =====================================================
-   MOBILE
-===================================================== */
-@media (max-width: 850px) {
-    body {
-        padding: 12px;
-    }
-    header {
-        align-items: flex-start;
-    }
-    .title-area h1 {
-        font-size: 23px;
-    }
-    .summary {
-        grid-template-columns: 1fr 1fr;
-    }
-    .form-grid {
-        grid-template-columns: 1fr 1fr;
-    }
-    .form-grid .full-mobile {
-        grid-column: 1 / -1;
-    }
-    .add-button {
-        width: 100%;
-    }
-    .dropdown-editor {
-        grid-template-columns: 1fr;
-    }
-}
-@media (max-width: 520px) {
-    .header-buttons {
-        flex-direction: column;
-    }
-    .summary {
-        grid-template-columns: 1fr;
-    }
-    .form-grid {
-        grid-template-columns: 1fr;
-    }
-    .form-grid .full-mobile {
-        grid-column: auto;
-    }
-    .table-header {
-        align-items: flex-start;
-        flex-direction: column;
-    }
-    .actions {
-        width: 100%;
-    }
-    .secondary-button {
-        flex: 1;
-    }
-    .motivation-popup {
-        left: 15px !important;
-        right: 15px !important;
-        bottom: 25px !important;
-        top: auto !important;
-        max-width: none;
-    }
-    .level-top {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-    .filter-grid,
-    .tool-grid {
-        grid-template-columns: 1fr;
-    }
-}
-/* =====================================================
-   HILFSKLASSE
-===================================================== */
-.hidden {
-    display: none !important;
 }
 </style>
 </head>
+
 <body>
-<div class="app">
-    <!-- =================================================
-         HEADER
-    ================================================= -->
-    <header>
-        <div class="title-area">
-            <h1>
-                🌸 Oma-Fahrtenbuch
-            </h1>
-            <p>
-                Jede Fahrt dokumentiert. Jede Oma-Fahrt ein kleiner Sieg.
-            </p>
+
+<header>
+    <div class="header-inner">
+
+        <div class="logo">
+            <div class="logo-icon">🚗</div>
+            <div>
+                <h1>Oma-Fahrtenbuch</h1>
+                <p>Fahrten einfach dokumentieren</p>
+            </div>
         </div>
+
         <div class="header-buttons">
-            <button
-                class="install-button hidden"
-                id="installButton"
-                onclick="installApp()"
-            >
-                📱 App installieren
+            <button class="icon-btn" onclick="toggleDarkMode()" title="Design wechseln">
+                🌙
             </button>
-            <button
-                class="theme-button"
-                onclick="toggleTheme()"
-                id="themeButton"
-            >
-                🌙 Dunkel
+
+            <button class="icon-btn" onclick="scrollToSettings()" title="Einstellungen">
+                ⚙️
             </button>
         </div>
-    </header>
-    <!-- =================================================
-         DRUCKTITEL
-    ================================================= -->
-    <div
-        class="print-title"
-        id="printTitle"
-    >
-        Oma-Fahrtenbuch
+
     </div>
-    <!-- =================================================
-         LEVEL
-    ================================================= -->
-    <section class="level-card">
+</header>
+
+
+<div class="container">
+
+    <!-- JAHR / MONAT -->
+    <div class="top-controls">
+
+        <div class="control-group">
+            <label>Jahr</label>
+            <select id="yearFilter" onchange="renderAll()"></select>
+        </div>
+
+        <div class="control-group">
+            <label>Monat</label>
+            <select id="monthFilter" onchange="renderAll()">
+                <option value="all">Ganzes Jahr</option>
+                <option value="0">Januar</option>
+                <option value="1">Februar</option>
+                <option value="2">März</option>
+                <option value="3">April</option>
+                <option value="4">Mai</option>
+                <option value="5">Juni</option>
+                <option value="6">Juli</option>
+                <option value="7">August</option>
+                <option value="8">September</option>
+                <option value="9">Oktober</option>
+                <option value="10">November</option>
+                <option value="11">Dezember</option>
+            </select>
+        </div>
+
+    </div>
+
+
+    <!-- STATISTIK -->
+    <div class="summary">
+
+        <div class="summary-card">
+            <div class="summary-icon">🚗</div>
+            <div class="summary-label">Fahrten</div>
+            <div class="summary-value" id="summaryTrips">0</div>
+        </div>
+
+        <div class="summary-card">
+            <div class="summary-icon">🛣️</div>
+            <div class="summary-label">Kilometer</div>
+            <div class="summary-value" id="summaryKm">0 km</div>
+        </div>
+
+        <div class="summary-card">
+            <div class="summary-icon">💶</div>
+            <div class="summary-label">Erstattung</div>
+            <div class="summary-value" id="summaryCost">0,00 €</div>
+        </div>
+
+        <div class="summary-card">
+            <div class="summary-icon">📊</div>
+            <div class="summary-label">Ø Kilometer/Fahrt</div>
+            <div class="summary-value" id="summaryAverage">0 km</div>
+        </div>
+
+    </div>
+
+
+    <!-- LEVEL -->
+    <div class="level-card">
+
         <div class="level-top">
-            <div class="level-title">
-                <div
-                    class="level-emoji"
-                    id="levelEmoji"
-                >
-                    🌱
+
+            <div>
+                <div class="level-number" id="levelNumber">
+                    Level 1
                 </div>
-                <div>
-                    <div class="level-small">
-                        Dein aktueller Rang
-                    </div>
-                    <div
-                        class="level-name"
-                        id="levelName"
-                    >
-                        Oma-Fahranfängerin
-                    </div>
-                    <div
-                        class="level-number"
-                        id="levelNumber"
-                    >
-                        Level 1
-                    </div>
+
+                <div class="level-name" id="levelName">
+                    Oma-Fahranfängerin 🌱
                 </div>
             </div>
-            <div
-                id="nextLevelText"
-                style="
-                    text-align:right;
-                    color:var(--muted);
-                    font-size:13px;
-                "
-            >
-                Erste Fahrt!
+
+            <div style="font-size:35px;">
+                🏆
             </div>
+
         </div>
+
         <div class="progress-container">
-            <div class="progress-info">
-                <span id="progressText">
-                    0 / 5 Fahrten
-                </span>
-                <span id="progressPercent">
-                    0 %
-                </span>
-            </div>
-            <div class="progress-bar">
-                <div
-                    class="progress-fill"
-                    id="progressFill"
-                ></div>
-            </div>
+            <div class="progress-bar" id="levelProgress"></div>
         </div>
-    </section>
-    <!-- =================================================
-         JAHR + MONAT
-    ================================================= -->
-    <section class="filter-card">
-        <div class="filter-grid">
-            <div class="filter-box">
-                <label>
-                    📅 Jahr
-                </label>
-                <select
-                    id="yearSelect"
-                    onchange="changeYear()"
-                ></select>
-            </div>
-            <div class="filter-box">
-                <label>
-                    🔎 Monat anzeigen
-                </label>
-                <select
-                    id="monthSelect"
-                    onchange="renderTrips()"
-                >
-                    <option value="all">
-                        Ganzes Jahr
-                    </option>
-                    <option value="0">
-                        Januar
-                    </option>
-                    <option value="1">
-                        Februar
-                    </option>
-                    <option value="2">
-                        März
-                    </option>
-                    <option value="3">
-                        April
-                    </option>
-                    <option value="4">
-                        Mai
-                    </option>
-                    <option value="5">
-                        Juni
-                    </option>
-                    <option value="6">
-                        Juli
-                    </option>
-                    <option value="7">
-                        August
-                    </option>
-                    <option value="8">
-                        September
-                    </option>
-                    <option value="9">
-                        Oktober
-                    </option>
-                    <option value="10">
-                        November
-                    </option>
-                    <option value="11">
-                        Dezember
-                    </option>
-                </select>
-            </div>
+
+        <div class="level-info">
+            <span id="levelCurrent">0 Fahrten</span>
+            <span id="levelNext">5 Fahrten bis zum nächsten Level</span>
         </div>
-    </section>
-    <!-- =================================================
-         ÜBERSICHT
-    ================================================= -->
-    <section class="summary">
-        <div class="summary-card">
-            <div class="summary-label">
-                Fahrten
-            </div>
-            <div
-                class="summary-value"
-                id="totalTrips"
-            >
-                0
-            </div>
+
+    </div>
+
+
+    <!-- NEUE FAHRT -->
+    <div class="card new-trip-card">
+
+        <h2>➕ Neue Fahrt</h2>
+
+        <div class="card-description">
+            Trage die komplette Strecke ein. Du kannst optional ein zweites Ziel hinzufügen.
         </div>
-        <div class="summary-card">
-            <div class="summary-label">
-                Gefahrene Kilometer
+
+
+        <div class="route-box">
+
+            <div class="route-title">
+                DEINE STRECKE
             </div>
-            <div
-                class="summary-value"
-                id="totalKm"
-            >
-                0 km
+
+            <div class="route-preview" id="routePreview">
+                Bitte Orte auswählen
             </div>
+
         </div>
-        <div class="summary-card">
-            <div class="summary-label">
-                Erstattungsbetrag
-            </div>
-            <div
-                class="summary-value"
-                id="totalCost"
-            >
-                0,00 €
-            </div>
-        </div>
-        <div class="summary-card">
-            <div class="summary-label">
-                Ø pro Fahrt
-            </div>
-            <div
-                class="summary-value"
-                id="averageKm"
-            >
-                0 km
-            </div>
-        </div>
-    </section>
-    <!-- =================================================
-         NEUE FAHRT
-    ================================================= -->
-    <section class="form-card">
-        <h2>
-            ➕ Neue Fahrt
-        </h2>
+
+
         <div class="form-grid">
-            <div>
-                <label>
-                    Abfahrtsort
+
+            <div class="form-field">
+
+                <label for="startPlace">
+                    Startort
                 </label>
-                <select
-                    id="fromSelect"
-                ></select>
+
+                <select id="startPlace" onchange="updateRoutePreview()">
+                </select>
+
             </div>
-            <div>
-                <label>
-                    Ankunftsort
+
+
+            <div class="form-field">
+
+                <label for="destination1">
+                    Ziel 1
                 </label>
-                <select
-                    id="toSelect"
-                ></select>
+
+                <select id="destination1" onchange="updateRoutePreview()">
+                </select>
+
             </div>
-            <div class="full-mobile">
+
+        </div>
+
+
+        <div class="toggle-row">
+
+            <input
+                type="checkbox"
+                id="hasSecondDestination"
+                onchange="toggleSecondDestination()"
+            >
+
+            <label for="hasSecondDestination">
+                Ich hatte noch ein weiteres Ziel
+            </label>
+
+        </div>
+
+
+        <div id="secondDestinationBox" class="hidden">
+
+            <div class="form-field">
+
+                <label for="destination2">
+                    Ziel 2 / Zwischenziel
+                </label>
+
+                <select id="destination2" onchange="updateRoutePreview()">
+                </select>
+
+            </div>
+
+        </div>
+
+
+        <div class="toggle-row">
+
+            <input
+                type="checkbox"
+                id="returnToStart"
+                checked
+                onchange="toggleReturn()"
+            >
+
+            <label for="returnToStart">
+                Rückfahrt zum Startort eintragen
+            </label>
+
+        </div>
+
+
+        <div id="returnBox">
+
+            <div class="form-field">
+
                 <label>
+                    Rückfahrt
+                </label>
+
+                <input
+                    type="text"
+                    id="returnPlaceDisplay"
+                    disabled
+                >
+
+            </div>
+
+        </div>
+
+
+        <div style="margin-top:22px;">
+
+            <label>
+                Kilometer der einzelnen Strecken
+            </label>
+
+            <div id="kmFields"></div>
+
+        </div>
+
+
+        <div class="form-grid" style="margin-top:18px;">
+
+            <div class="form-field">
+
+                <label for="tripDate">
+                    Datum
+                </label>
+
+                <input
+                    type="date"
+                    id="tripDate"
+                >
+
+            </div>
+
+
+            <div class="form-field">
+
+                <label for="reason">
                     Grund der Fahrt
                 </label>
-                <select
-                    id="reasonSelect"
-                ></select>
+
+                <select id="reason">
+                </select>
+
             </div>
+
+        </div>
+
+
+        <div class="route-total">
+
             <div>
-                <label>
-                    Gefahrene KM
-                </label>
-                <input
-                    type="number"
-                    id="kmInput"
-                    min="0"
-                    step="0.1"
-                    placeholder="z. B. 12,5"
-                >
+                <div style="font-size:12px;color:var(--muted);">
+                    Gesamtstrecke
+                </div>
+
+                <strong id="totalKmPreview">
+                    0,0 km
+                </strong>
             </div>
+
+            <div>
+                <div style="font-size:12px;color:var(--muted);">
+                    Erstattung
+                </div>
+
+                <div class="route-total-cost" id="totalCostPreview">
+                    0,00 €
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="actions" style="margin-top:20px;">
+
             <button
-                class="add-button"
-                onclick="addTrip()"
+                class="primary-btn"
+                onclick="saveTrip()"
             >
-                Fahrt speichern
+                🚗 Fahrt speichern
             </button>
+
+            <button
+                class="secondary-btn"
+                onclick="resetTripForm()"
+            >
+                Zurücksetzen
+            </button>
+
         </div>
-    </section>
-    <!-- =================================================
-         TABELLE
-    ================================================= -->
-    <section class="table-card">
-        <div class="table-header">
-            <h2>
-                📋 Fahrten
-            </h2>
-            <div class="actions">
-                <button
-                    class="secondary-button"
-                    onclick="exportCSV()"
-                >
-                    📊 Excel
-                </button>
-                <button
-                    class="secondary-button"
-                    onclick="printYear()"
-                >
-                    🖨️ Drucken
-                </button>
-                <button
-                    class="secondary-button danger-button"
-                    onclick="deleteAllTrips()"
-                >
-                    🗑️ Alles löschen
-                </button>
-            </div>
+
+    </div>
+
+
+    <!-- FAHRTEN -->
+    <div class="card">
+
+        <h2>📋 Fahrtenübersicht</h2>
+
+        <div class="card-description">
+            Deine gespeicherten Fahrten für den ausgewählten Zeitraum.
         </div>
+
         <div class="table-wrapper">
+
             <table>
+
                 <thead>
+
                     <tr>
-                        <th>
-                            Datum
-                        </th>
-                        <th>
-                            Abfahrtsort
-                        </th>
-                        <th>
-                            Ankunftsort
-                        </th>
-                        <th>
-                            Grund
-                        </th>
-                        <th>
-                            KM
-                        </th>
-                        <th>
-                            Kosten
-                        </th>
-                        <th></th>
+                        <th>Datum</th>
+                        <th>Strecke</th>
+                        <th>Grund</th>
+                        <th>KM</th>
+                        <th>Erstattung</th>
+                        <th class="delete-col">Aktion</th>
                     </tr>
+
                 </thead>
-                <tbody
-                    id="tripTableBody"
-                ></tbody>
+
+                <tbody id="tripTableBody">
+                </tbody>
+
             </table>
+
         </div>
-    </section>
-    <!-- =================================================
-         BACKUP
-    ================================================= -->
-    <section class="tools-card">
-        <h2>
-            💾 Daten sichern
-        </h2>
-        <p>
-            Am besten regelmäßig ein Backup herunterladen.
-            So gehen die Fahrten auch dann nicht verloren,
-            wenn das Handy kaputtgeht oder der Browser gelöscht wird.
-        </p>
-        <div class="tool-grid">
+
+    </div>
+
+
+    <!-- AKTIONEN -->
+    <div class="card">
+
+        <h2>📦 Daten & Export</h2>
+
+        <div class="card-description">
+            Daten sichern, exportieren oder die Jahresübersicht ausdrucken.
+        </div>
+
+        <div class="actions">
+
             <button
-                class="tool-button"
-                onclick="downloadBackup()"
-            >
-                ☁️ Backup herunterladen
-                <br>
-                <small>
-                    Alle Jahre + Einstellungen sichern
-                </small>
-            </button>
-            <button
-                class="tool-button"
-                onclick="document.getElementById('backupInput').click()"
-            >
-                📥 Backup wiederherstellen
-                <br>
-                <small>
-                    Gespeicherte JSON-Datei importieren
-                </small>
-            </button>
-            <button
-                class="tool-button"
+                class="primary-btn"
                 onclick="exportCSV()"
             >
-                📊 Excel-Datei erstellen
-                <br>
-                <small>
-                    Aktuell ausgewähltes Jahr / Filter
-                </small>
+                📊 Excel / CSV
             </button>
+
             <button
-                class="tool-button"
-                onclick="printYear()"
+                class="secondary-btn"
+                onclick="printOverview()"
             >
                 🖨️ Jahresübersicht drucken
-                <br>
-                <small>
-                    Saubere Übersicht für Unterlagen
-                </small>
             </button>
+
+            <button
+                class="secondary-btn"
+                onclick="downloadBackup()"
+            >
+                💾 Backup herunterladen
+            </button>
+
+            <button
+                class="secondary-btn"
+                onclick="document.getElementById('backupInput').click()"
+            >
+                ♻️ Backup wiederherstellen
+            </button>
+
+            <input
+                type="file"
+                id="backupInput"
+                accept=".json"
+                class="hidden"
+                onchange="restoreBackup(event)"
+            >
+
         </div>
-        <input
-            type="file"
-            id="backupInput"
-            accept=".json,application/json"
-            class="hidden"
-            onchange="restoreBackup(event)"
-        >
-    </section>
-    <!-- =================================================
-         EINSTELLUNGEN
-    ================================================= -->
-    <section class="settings">
-        <h2>
-            ⚙️ Auswahlmöglichkeiten
-        </h2>
-        <p>
-            Orte und Fahrtgründe kannst du hier selbst verwalten.
-        </p>
-        <div class="dropdown-editor">
-            <!-- ORTE -->
-            <div class="editor-box">
-                <h3>
-                    📍 Orte
-                </h3>
-                <div
-                    class="option-list"
-                    id="placesList"
-                ></div>
-                <div class="add-option">
-                    <input
-                        type="text"
-                        id="newPlace"
-                        placeholder="Neuen Ort hinzufügen"
-                    >
-                    <button
-                        onclick="addPlace()"
-                    >
-                        +
-                    </button>
-                </div>
-            </div>
-            <!-- GRÜNDE -->
-            <div class="editor-box">
-                <h3>
-                    🚗 Fahrtgründe
-                </h3>
-                <div
-                    class="option-list"
-                    id="reasonsList"
-                ></div>
-                <div class="add-option">
-                    <input
-                        type="text"
-                        id="newReason"
-                        placeholder="Neuen Grund hinzufügen"
-                    >
-                    <button
-                        onclick="addReason()"
-                    >
-                        +
-                    </button>
-                </div>
-            </div>
-        </div>
-    </section>
-    <div class="footer-note">
-        💾 Die Daten werden automatisch auf diesem Gerät gespeichert.
-        Bitte trotzdem regelmäßig ein Backup machen.
+
     </div>
+
+
+    <!-- EINSTELLUNGEN -->
+    <div class="card settings-card" id="settings">
+
+        <h2>⚙️ Einstellungen</h2>
+
+        <div class="card-description">
+            Hier kannst du eigene Orte und Fahrtgründe hinzufügen.
+        </div>
+
+
+        <div class="settings-section">
+
+            <h3>📍 Orte</h3>
+
+            <div class="settings-list" id="placesList">
+            </div>
+
+            <div class="add-row">
+
+                <input
+                    type="text"
+                    id="newPlace"
+                    placeholder="z. B. Physiotherapie"
+                >
+
+                <button
+                    class="primary-btn"
+                    onclick="addPlace()"
+                >
+                    Hinzufügen
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <div class="settings-section">
+
+            <h3>📝 Fahrtgründe</h3>
+
+            <div class="settings-list" id="reasonsList">
+            </div>
+
+            <div class="add-row">
+
+                <input
+                    type="text"
+                    id="newReason"
+                    placeholder="z. B. Rezept abholen"
+                >
+
+                <button
+                    class="primary-btn"
+                    onclick="addReason()"
+                >
+                    Hinzufügen
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <div class="actions">
+
+            <button
+                class="danger-btn"
+                onclick="deleteAllTrips()"
+            >
+                Alle Fahrten dieses Jahres löschen
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <footer>
+        Oma-Fahrtenbuch · 0,30 € pro Kilometer · Daten werden lokal auf diesem Gerät gespeichert.
+    </footer>
+
 </div>
-<!-- =====================================================
-     POPUP CONTAINER
-===================================================== -->
+
+
+<!-- LEVEL-UP MODAL -->
 <div
-    id="motivationContainer"
-></div>
+    class="modal-overlay hidden"
+    id="levelModal"
+    onclick="closeLevelModal(event)"
+>
+
+    <div class="modal">
+
+        <div class="modal-icon">
+            🏆
+        </div>
+
+        <h2>Level-Up! 🎉</h2>
+
+        <p>
+            Du hast ein neues Level erreicht!
+        </p>
+
+        <h2 id="newLevelName"></h2>
+
+        <button
+            class="primary-btn"
+            onclick="closeLevelModal()"
+            style="margin-top:15px;"
+        >
+            Weiter geht's! 🚗
+        </button>
+
+    </div>
+
+</div>
+
+
 <script>
-/* =====================================================
+
+/* =========================================================
+   KONFIGURATION
+========================================================= */
+
+const COST_PER_KM = 0.30;
+
+const STORAGE_KEY = "omaTripsByYear";
+const PLACES_KEY = "omaPlaces";
+const REASONS_KEY = "omaReasons";
+const THEME_KEY = "omaTheme";
+
+
+/* =========================================================
    STANDARDWERTE
-===================================================== */
+========================================================= */
+
 const DEFAULT_PLACES = [
     "Zuhause",
     "Arzt",
@@ -1187,6 +1222,7 @@ const DEFAULT_PLACES = [
     "Apotheke",
     "Supermarkt"
 ];
+
 const DEFAULT_REASONS = [
     "Arzttermin",
     "Krankenhaus",
@@ -1195,1476 +1231,2038 @@ const DEFAULT_REASONS = [
     "Einkaufen",
     "Sonstiges"
 ];
-/* =====================================================
-   DATEN
-===================================================== */
-let places =
-    JSON.parse(
-        localStorage.getItem("omaPlaces")
-    ) || DEFAULT_PLACES;
-let reasons =
-    JSON.parse(
-        localStorage.getItem("omaReasons")
-    ) || DEFAULT_REASONS;
-/*
-    Die Fahrten werden jetzt nach Jahr gespeichert.
-    Beispiel:
+
+
+const LEVELS = [
     {
-        "2026": [...],
-        "2027": [...]
-    }
-*/
-let allTrips =
-    JSON.parse(
-        localStorage.getItem("omaTripsByYear")
-    ) || {};
-/*
-    Falls noch Daten aus der alten Version
-    vorhanden sind, werden diese automatisch
-    übernommen.
-*/
-const oldTrips =
-    JSON.parse(
-        localStorage.getItem("omaTrips")
-    ) || [];
-if (
-    oldTrips.length > 0 &&
-    Object.keys(allTrips).length === 0
-) {
-    const currentYear =
-        new Date().getFullYear();
-    allTrips[currentYear] =
-        oldTrips;
-    saveAllTrips();
-}
-/* =====================================================
-   JAHR
-===================================================== */
-let selectedYear =
-    Number(
-        localStorage.getItem("omaSelectedYear")
-    ) ||
-    new Date().getFullYear();
-function getTripsForYear(year) {
-    return allTrips[year] || [];
-}
-function getCurrentTrips() {
-    return getTripsForYear(
-        selectedYear
-    );
-}
-function saveAllTrips() {
-    localStorage.setItem(
-        "omaTripsByYear",
-        JSON.stringify(allTrips)
-    );
-}
-/* =====================================================
-   LEVEL
-===================================================== */
-const levels = [
-    {
-        level: 1,
-        name: "Oma-Fahranfängerin",
-        emoji: "🌱",
-        required: 0
+        name: "Oma-Fahranfängerin 🌱",
+        min: 0
     },
     {
-        level: 2,
-        name: "Pflege-Azubi",
-        emoji: "🚗",
-        required: 5
+        name: "Pflege-Azubi 🚗",
+        min: 5
     },
     {
-        level: 3,
-        name: "Oma-Chauffeuse",
-        emoji: "💅",
-        required: 10
+        name: "Oma-Chauffeuse 💅",
+        min: 10
     },
     {
-        level: 4,
-        name: "Pflege-Profi",
-        emoji: "🏆",
-        required: 20
+        name: "Pflege-Profi 🏆",
+        min: 20
     },
     {
-        level: 5,
-        name: "Oma-Fahrdienstleitung",
-        emoji: "👑",
-        required: 35
+        name: "Oma-Fahrdienstleitung 👑",
+        min: 35
     },
     {
-        level: 6,
-        name: "Pflegelegende",
-        emoji: "🔥",
-        required: 50
+        name: "Pflegelegende 🔥",
+        min: 50
     },
     {
-        level: 7,
-        name: "Schwiegertochter Supreme",
-        emoji: "💎",
-        required: 75
+        name: "Schwiegertochter Supreme 💎",
+        min: 75
     },
     {
-        level: 8,
-        name: "Oma-Schutzpatronin",
-        emoji: "🦸‍♀️",
-        required: 100
+        name: "Oma-Schutzpatronin 🦸‍♀️",
+        min: 100
     },
     {
-        level: 9,
-        name: "Pflege-Endgegnerin",
-        emoji: "⚡",
-        required: 150
+        name: "Pflege-Endgegnerin ⚡",
+        min: 150
     },
     {
-        level: 10,
-        name: "Unangefochtene Oma-Legende",
-        emoji: "👑",
-        required: 250
+        name: "Unangefochtene Oma-Legende 👑",
+        min: 250
     }
 ];
-/* =====================================================
-   MOTIVATION
-===================================================== */
-const motivationMessages = [
-    ["🎉", "Yeey! Eine Fahrt abgeschlossen!"],
-    ["👑", "Einfach beste Schwiegertochter EU-West."],
-    ["🚗", "Kilometer gesammelt. Oma-Level +1!"],
-    ["💅", "Pflegeorganisation? Läuft bei dir."],
-    ["🏆", "Und wieder eine Fahrt von der To-do-Liste geprügelt."],
-    ["💖", "Oma sagt vielleicht nichts, aber wir sehen deine Arbeit."],
-    ["🫡", "Auftrag ausgeführt. Stabil."],
-    ["⭐", "Eine weitere Heldentat dokumentiert!"],
-    ["📋", "Bürokratie besiegt. Zumindest für heute."],
-    ["🚀", "BOOM. Fahrt eingetragen. Nächste!"],
-    ["💰", "0,30 € × KM = Steuer-Voodoo erfolgreich dokumentiert."],
-    ["🧓❤️", "Oma-Fahrdienst deluxe – Premium-Service."],
-    ["🎀", "Sehr fleißig. Dafür gibt's einen imaginären Orden."],
-    ["🥳", "Das Finanzamt wird diese Ordnung lieben."],
-    ["🦸‍♀️", "Super-Schwiegertochter im Einsatz!"],
-    ["✨", "Eine Fahrt weniger im Kopf. Herrlich."],
-    ["🔥", "Läuft! Du bist heute offiziell nicht aufzuhalten."],
-    ["🧠", "Und genau deshalb hast du diese App."],
-    ["🏅", "Fahrtenbuch-Profi. Goldmedaille geht raus."],
-    ["😎", "Eintragen, abhaken, weitermachen. Läuft."],
-    ["💪", "Stark! Wieder ein bisschen Steuerchaos verhindert."],
-    ["🌸", "Oma-Fahrdienst: 5 Sterne, würde wieder buchen."],
-    ["📈", "Die Statistik wächst. Dein Ruhm auch."],
-    ["👩‍🚒", "Pflege-Feuerwehr erfolgreich ausgerückt."],
-    ["🍾", "Fahrt gespeichert! Das verdient eigentlich einen Sekt."],
-    ["🧾", "Eine weitere Quittung für deine Großartigkeit."],
-    ["🛞", "Die Reifen drehen, die Bürokratie weint."],
-    ["📚", "Dokumentation? Vorbildlich. 10/10."],
-    ["🫶", "Liebe ist manchmal auch 17,4 km Autofahrt."],
-    ["🥇", "Du hast gerade wieder Pflegegeschichte geschrieben."]
+
+
+const MOTIVATIONAL_MESSAGES = [
+    "Yeey! Eine Fahrt abgeschlossen! 🚗",
+    "Einfach beste Schwiegertochter EU-West. 🏆",
+    "Kilometer gesammelt. Oma-Level +1! 🚀",
+    "Pflegeorganisation? Läuft bei dir. 😎",
+    "Und wieder eine Fahrt von der To-do-Liste geprügelt. 💥",
+    "Oma sagt vielleicht nichts, aber wir sehen deine Arbeit. ❤️",
+    "Auftrag ausgeführt. Stabil. 😌",
+    "Eine weitere Heldentat dokumentiert! 🦸‍♀️",
+    "Bürokratie besiegt. Zumindest für heute. 😎",
+    "BOOM. Fahrt eingetragen. Nächste! 🚗",
+    "0,30 € × KM = Steuer-Voodoo erfolgreich dokumentiert. 🧙‍♀️",
+    "Oma-Fahrdienst deluxe – Premium-Service. ⭐",
+    "Sehr fleißig. Dafür gibt's einen imaginären Orden. 🥇",
+    "Das Finanzamt wird diese Ordnung lieben. 📊",
+    "Super-Schwiegertochter im Einsatz! 💪",
+    "Eine Fahrt weniger im Kopf. Herrlich. 😌",
+    "Läuft! Du bist heute offiziell nicht aufzuhalten. 🔥",
+    "Und genau deshalb hast du diese App. 😌",
+    "Fahrtenbuch-Profi. Goldmedaille geht raus. 🥇",
+    "Eintragen, abhaken, weitermachen. Läuft. ✔️",
+    "Stark! Wieder ein bisschen Steuerchaos verhindert. 💪",
+    "Oma-Fahrdienst: 5 Sterne, würde wieder buchen. ⭐⭐⭐⭐⭐",
+    "Die Statistik wächst. Dein Ruhm auch. 📈",
+    "Pflege-Feuerwehr erfolgreich ausgerückt. 🚒",
+    "Fahrt gespeichert! Das verdient eigentlich einen Sekt. 🥂"
 ];
-/* =====================================================
+
+
+/* =========================================================
    INITIALISIERUNG
-===================================================== */
-document.addEventListener(
-    "DOMContentLoaded",
-    function() {
-        loadTheme();
-        renderYearSelect();
-        renderDropdowns();
-        renderSettings();
-        renderTrips();
-        updateLevel();
-        registerServiceWorker();
+========================================================= */
+
+let tripsByYear = {};
+let places = [];
+let reasons = [];
+
+let lastTripCount = 0;
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    loadData();
+    loadSettings();
+    loadTheme();
+
+    setupDate();
+
+    populateYears();
+    populatePlaces();
+    populateReasons();
+
+    updateRoutePreview();
+    renderAll();
+
+    registerServiceWorker();
+
+});
+
+
+/* =========================================================
+   DATEN LADEN
+========================================================= */
+
+function loadData() {
+
+    try {
+
+        const saved = localStorage.getItem(STORAGE_KEY);
+
+        if (saved) {
+            tripsByYear = JSON.parse(saved);
+        }
+
+    } catch (error) {
+
+        console.error("Fehler beim Laden der Daten:", error);
+
+        tripsByYear = {};
+
     }
-);
-/* =====================================================
-   JAHR AUSWÄHLEN
-===================================================== */
-function renderYearSelect() {
+
+
+    /*
+       Migration alter Version:
+       Falls die alte App noch "omaTrips" verwendet,
+       werden die alten Fahrten in das aktuelle Jahr übernommen.
+    */
+
+    const oldTrips = localStorage.getItem("omaTrips");
+
+    if (oldTrips && !Object.keys(tripsByYear).length) {
+
+        try {
+
+            const oldData = JSON.parse(oldTrips);
+
+            const year = new Date().getFullYear();
+
+            tripsByYear[year] = oldData.map(trip => ({
+
+                id: Date.now() + Math.random(),
+
+                date: trip.date || new Date().toISOString().slice(0,10),
+
+                start: trip.from || "Zuhause",
+
+                destination1: trip.to || "Unbekannt",
+
+                destination2: "",
+
+                returnToStart: false,
+
+                km1: Number(trip.km) || 0,
+
+                km2: 0,
+
+                km3: 0,
+
+                totalKm: Number(trip.km) || 0,
+
+                reason: trip.reason || "Sonstiges"
+
+            }));
+
+            saveData();
+
+        } catch (error) {
+
+            console.error("Migration fehlgeschlagen:", error);
+
+        }
+
+    }
+
+}
+
+
+function saveData() {
+
+    localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify(tripsByYear)
+    );
+
+}
+
+
+/* =========================================================
+   EINSTELLUNGEN
+========================================================= */
+
+function loadSettings() {
+
+    try {
+
+        const savedPlaces = localStorage.getItem(PLACES_KEY);
+
+        places = savedPlaces
+            ? JSON.parse(savedPlaces)
+            : [...DEFAULT_PLACES];
+
+
+        const savedReasons = localStorage.getItem(REASONS_KEY);
+
+        reasons = savedReasons
+            ? JSON.parse(savedReasons)
+            : [...DEFAULT_REASONS];
+
+    } catch (error) {
+
+        places = [...DEFAULT_PLACES];
+        reasons = [...DEFAULT_REASONS];
+
+    }
+
+}
+
+
+function saveSettings() {
+
+    localStorage.setItem(
+        PLACES_KEY,
+        JSON.stringify(places)
+    );
+
+    localStorage.setItem(
+        REASONS_KEY,
+        JSON.stringify(reasons)
+    );
+
+}
+
+
+function addPlace() {
+
+    const input = document.getElementById("newPlace");
+
+    const value = input.value.trim();
+
+    if (!value) return;
+
+    if (places.includes(value)) {
+
+        alert("Diesen Ort gibt es bereits.");
+
+        return;
+
+    }
+
+    places.push(value);
+
+    saveSettings();
+
+    input.value = "";
+
+    populatePlaces();
+
+    renderSettings();
+
+}
+
+
+function removePlace(index) {
+
+    if (places.length <= 1) {
+
+        alert("Mindestens ein Ort muss vorhanden bleiben.");
+
+        return;
+
+    }
+
+    if (!confirm(`„${places[index]}“ wirklich löschen?`)) {
+        return;
+    }
+
+    places.splice(index, 1);
+
+    saveSettings();
+
+    populatePlaces();
+
+    renderSettings();
+
+    updateRoutePreview();
+
+}
+
+
+function addReason() {
+
+    const input = document.getElementById("newReason");
+
+    const value = input.value.trim();
+
+    if (!value) return;
+
+    if (reasons.includes(value)) {
+
+        alert("Diesen Grund gibt es bereits.");
+
+        return;
+
+    }
+
+    reasons.push(value);
+
+    saveSettings();
+
+    input.value = "";
+
+    populateReasons();
+
+    renderSettings();
+
+}
+
+
+function removeReason(index) {
+
+    if (reasons.length <= 1) {
+
+        alert("Mindestens ein Fahrtgrund muss vorhanden bleiben.");
+
+        return;
+
+    }
+
+    if (!confirm(`„${reasons[index]}“ wirklich löschen?`)) {
+        return;
+    }
+
+    reasons.splice(index, 1);
+
+    saveSettings();
+
+    populateReasons();
+
+    renderSettings();
+
+}
+
+
+/* =========================================================
+   DROPDOWNS
+========================================================= */
+
+function populatePlaces() {
+
+    const selects = [
+        document.getElementById("startPlace"),
+        document.getElementById("destination1"),
+        document.getElementById("destination2")
+    ];
+
+    selects.forEach(select => {
+
+        if (!select) return;
+
+        const oldValue = select.value;
+
+        select.innerHTML = "";
+
+        places.forEach(place => {
+
+            const option = document.createElement("option");
+
+            option.value = place;
+            option.textContent = place;
+
+            select.appendChild(option);
+
+        });
+
+        if (places.includes(oldValue)) {
+            select.value = oldValue;
+        }
+
+    });
+
+
+    if (!document.getElementById("startPlace").value && places.length) {
+        document.getElementById("startPlace").value = places[0];
+    }
+
+    if (!document.getElementById("destination1").value && places.length > 1) {
+        document.getElementById("destination1").value = places[1];
+    }
+
+    updateReturnDisplay();
+
+}
+
+
+function populateReasons() {
+
+    const select = document.getElementById("reason");
+
+    const oldValue = select.value;
+
+    select.innerHTML = "";
+
+    reasons.forEach(reason => {
+
+        const option = document.createElement("option");
+
+        option.value = reason;
+        option.textContent = reason;
+
+        select.appendChild(option);
+
+    });
+
+    if (reasons.includes(oldValue)) {
+        select.value = oldValue;
+    }
+
+}
+
+
+function renderSettings() {
+
+    const placesList = document.getElementById("placesList");
+
+    placesList.innerHTML = "";
+
+    places.forEach((place, index) => {
+
+        const tag = document.createElement("div");
+
+        tag.className = "tag";
+
+        tag.innerHTML = `
+            <span>${escapeHtml(place)}</span>
+            <button onclick="removePlace(${index})">×</button>
+        `;
+
+        placesList.appendChild(tag);
+
+    });
+
+
+    const reasonsList = document.getElementById("reasonsList");
+
+    reasonsList.innerHTML = "";
+
+    reasons.forEach((reason, index) => {
+
+        const tag = document.createElement("div");
+
+        tag.className = "tag";
+
+        tag.innerHTML = `
+            <span>${escapeHtml(reason)}</span>
+            <button onclick="removeReason(${index})">×</button>
+        `;
+
+        reasonsList.appendChild(tag);
+
+    });
+
+}
+
+
+/* =========================================================
+   FAHRT-FORMULAR
+========================================================= */
+
+function setupDate() {
+
+    const dateInput = document.getElementById("tripDate");
+
+    const today = new Date();
+
+    const localDate = new Date(
+        today.getTime() - today.getTimezoneOffset() * 60000
+    )
+    .toISOString()
+    .slice(0, 10);
+
+    dateInput.value = localDate;
+
+}
+
+
+function toggleSecondDestination() {
+
+    const checked =
+        document.getElementById("hasSecondDestination").checked;
+
+    const box =
+        document.getElementById("secondDestinationBox");
+
+    box.classList.toggle("hidden", !checked);
+
+    updateKmFields();
+
+    updateRoutePreview();
+
+}
+
+
+function toggleReturn() {
+
+    const checked =
+        document.getElementById("returnToStart").checked;
+
+    document.getElementById("returnBox")
+        .classList.toggle("hidden", !checked);
+
+    updateKmFields();
+
+    updateRoutePreview();
+
+}
+
+
+function updateReturnDisplay() {
+
+    const start =
+        document.getElementById("startPlace").value;
+
+    document.getElementById("returnPlaceDisplay").value =
+        start || "";
+
+}
+
+
+function updateRoutePreview() {
+
+    updateReturnDisplay();
+
+    const start =
+        document.getElementById("startPlace").value;
+
+    const destination1 =
+        document.getElementById("destination1").value;
+
+    const hasSecond =
+        document.getElementById("hasSecondDestination").checked;
+
+    const destination2 =
+        document.getElementById("destination2").value;
+
+    const returnToStart =
+        document.getElementById("returnToStart").checked;
+
+
+    const route = [];
+
+    if (start) route.push(start);
+
+    if (destination1) route.push(destination1);
+
+    if (hasSecond && destination2) {
+        route.push(destination2);
+    }
+
+    if (returnToStart && start) {
+        route.push(start);
+    }
+
+
+    const preview = document.getElementById("routePreview");
+
+    if (!route.length) {
+
+        preview.textContent =
+            "Bitte Orte auswählen";
+
+        return;
+
+    }
+
+
+    preview.innerHTML =
+        route
+            .map((place, index) => {
+
+                if (index === 0) {
+                    return `<span>${escapeHtml(place)}</span>`;
+                }
+
+                return `
+                    <span class="route-arrow">→</span>
+                    <span>${escapeHtml(place)}</span>
+                `;
+
+            })
+            .join("");
+
+
+    updateKmFields();
+
+}
+
+
+function getRoutePlaces() {
+
+    const start =
+        document.getElementById("startPlace").value;
+
+    const destination1 =
+        document.getElementById("destination1").value;
+
+    const hasSecond =
+        document.getElementById("hasSecondDestination").checked;
+
+    const destination2 =
+        document.getElementById("destination2").value;
+
+    const returnToStart =
+        document.getElementById("returnToStart").checked;
+
+
+    const route = [];
+
+    if (start) route.push(start);
+
+    if (destination1) route.push(destination1);
+
+    if (hasSecond && destination2) {
+        route.push(destination2);
+    }
+
+    if (returnToStart && start) {
+        route.push(start);
+    }
+
+    return route;
+
+}
+
+
+function updateKmFields() {
+
+    const container =
+        document.getElementById("kmFields");
+
+    const route = getRoutePlaces();
+
+    container.innerHTML = "";
+
+
+    for (let i = 0; i < route.length - 1; i++) {
+
+        const from = route[i];
+
+        const to = route[i + 1];
+
+        const row = document.createElement("div");
+
+        row.className = "km-row";
+
+        row.innerHTML = `
+
+            <div>
+                <div class="km-label">
+                    ${escapeHtml(from)}
+                    → ${escapeHtml(to)}
+                </div>
+
+                <div class="km-hint">
+                    Kilometer für diesen Streckenabschnitt
+                </div>
+            </div>
+
+            <input
+                type="number"
+                min="0"
+                step="0.1"
+                class="route-km-input"
+                data-route-index="${i}"
+                placeholder="0,0"
+                oninput="updateTotalKm()"
+            >
+
+        `;
+
+        container.appendChild(row);
+
+    }
+
+    updateTotalKm();
+
+}
+
+
+function updateTotalKm() {
+
+    const inputs =
+        document.querySelectorAll(".route-km-input");
+
+    let total = 0;
+
+    inputs.forEach(input => {
+
+        const value =
+            parseFloat(input.value.replace(",", "."));
+
+        if (!isNaN(value)) {
+            total += value;
+        }
+
+    });
+
+
+    document.getElementById("totalKmPreview")
+        .textContent =
+        formatNumber(total) + " km";
+
+
+    document.getElementById("totalCostPreview")
+        .textContent =
+        formatEuro(total * COST_PER_KM);
+
+}
+
+
+/* =========================================================
+   FAHRT SPEICHERN
+========================================================= */
+
+function saveTrip() {
+
+    const date =
+        document.getElementById("tripDate").value;
+
+    const reason =
+        document.getElementById("reason").value;
+
+    const route =
+        getRoutePlaces();
+
+
+    if (!date) {
+
+        alert("Bitte ein Datum auswählen.");
+
+        return;
+
+    }
+
+
+    if (route.length < 2) {
+
+        alert("Bitte mindestens ein Ziel auswählen.");
+
+        return;
+
+    }
+
+
+    const kmInputs =
+        document.querySelectorAll(".route-km-input");
+
+    const kmValues = [];
+
+    let totalKm = 0;
+
+    for (const input of kmInputs) {
+
+        const value =
+            parseFloat(input.value.replace(",", "."));
+
+        if (isNaN(value) || value < 0) {
+
+            alert("Bitte bei allen Streckenabschnitten gültige Kilometer eintragen.");
+
+            input.focus();
+
+            return;
+
+        }
+
+        kmValues.push(value);
+
+        totalKm += value;
+
+    }
+
+
+    if (totalKm <= 0) {
+
+        if (!confirm("Die Gesamtstrecke beträgt 0 km. Trotzdem speichern?")) {
+            return;
+        }
+
+    }
+
+
+    const year =
+        new Date(date).getFullYear();
+
+
+    if (!tripsByYear[year]) {
+        tripsByYear[year] = [];
+    }
+
+
+    const trip = {
+
+        id:
+            Date.now() + Math.random(),
+
+        date,
+
+        route,
+
+        start:
+            route[0],
+
+        destination1:
+            route[1] || "",
+
+        destination2:
+            route[2] || "",
+
+        returnToStart:
+            route.length > 2
+                ? route[route.length - 1] === route[0]
+                : route.length === 3 && route[2] === route[0],
+
+        kmSegments:
+            kmValues,
+
+        totalKm,
+
+        reason
+
+    };
+
+
+    const previousCount =
+        getAllTripsCount();
+
+
+    tripsByYear[year].push(trip);
+
+    saveData();
+
+
+    populateYears();
+
+    document.getElementById("yearFilter").value =
+        String(year);
+
+
+    renderAll();
+
+    showMotivation();
+
+
+    const newCount =
+        getAllTripsCount();
+
+
+    if (getLevel(newCount).index > getLevel(previousCount).index) {
+
+        setTimeout(() => {
+
+            showLevelUp(
+                getLevel(newCount)
+            );
+
+        }, 600);
+
+    }
+
+
+    resetTripForm();
+
+}
+
+
+/* =========================================================
+   FORMULAR ZURÜCKSETZEN
+========================================================= */
+
+function resetTripForm() {
+
+    document.getElementById("hasSecondDestination").checked =
+        false;
+
+    document.getElementById("secondDestinationBox")
+        .classList.add("hidden");
+
+
+    document.getElementById("returnToStart").checked =
+        true;
+
+    document.getElementById("returnBox")
+        .classList.remove("hidden");
+
+
+    if (places.length > 0) {
+        document.getElementById("startPlace").value =
+            places[0];
+    }
+
+    if (places.length > 1) {
+        document.getElementById("destination1").value =
+            places[1];
+    }
+
+
+    setupDate();
+
+    document.querySelectorAll(".route-km-input")
+        .forEach(input => input.value = "");
+
+
+    updateRoutePreview();
+
+}
+
+
+/* =========================================================
+   FILTER
+========================================================= */
+
+function populateYears() {
+
     const select =
-        document.getElementById(
-            "yearSelect"
-        );
+        document.getElementById("yearFilter");
+
     const currentYear =
         new Date().getFullYear();
+
     const years =
         new Set();
-    /*
-        Die letzten Jahre und zukünftige Jahre
-        werden angeboten.
-    */
-    for (
-        let year = currentYear - 3;
-        year <= currentYear + 3;
-        year++
-    ) {
+
+
+    for (let year = currentYear - 3; year <= currentYear + 3; year++) {
         years.add(year);
     }
-    Object.keys(allTrips).forEach(
-        year => years.add(
-            Number(year)
-        )
-    );
+
+
+    Object.keys(tripsByYear).forEach(year => {
+        years.add(Number(year));
+    });
+
+
+    const oldValue =
+        select.value;
+
+
     select.innerHTML = "";
+
     [...years]
-        .sort(
-            (a,b) => b-a
-        )
-        .forEach(
-            year => {
-                select.innerHTML += `
-                    <option
-                        value="${year}"
-                        ${year === selectedYear ? "selected" : ""}
-                    >
-                        ${year}
-                    </option>
-                `;
-            }
-        );
-}
-function changeYear() {
-    selectedYear =
-        Number(
-            document.getElementById(
-                "yearSelect"
-            ).value
-        );
-    localStorage.setItem(
-        "omaSelectedYear",
-        selectedYear
-    );
-    document.getElementById(
-        "monthSelect"
-    ).value = "all";
-    renderTrips();
-    updateLevel();
-}
-/* =====================================================
-   DROPDOWNS
-===================================================== */
-function renderDropdowns() {
-    const from =
-        document.getElementById(
-            "fromSelect"
-        );
-    const to =
-        document.getElementById(
-            "toSelect"
-        );
-    const reason =
-        document.getElementById(
-            "reasonSelect"
-        );
-    from.innerHTML = "";
-    to.innerHTML = "";
-    reason.innerHTML = "";
-    places.forEach(
-        place => {
-            from.innerHTML += `
-                <option value="${escapeHTML(place)}">
-                    ${escapeHTML(place)}
-                </option>
-            `;
-            to.innerHTML += `
-                <option value="${escapeHTML(place)}">
-                    ${escapeHTML(place)}
-                </option>
-            `;
-        }
-    );
-    reasons.forEach(
-        item => {
-            reason.innerHTML += `
-                <option value="${escapeHTML(item)}">
-                    ${escapeHTML(item)}
-                </option>
-            `;
-        }
-    );
-}
-/* =====================================================
-   FAHRT HINZUFÜGEN
-===================================================== */
-function addTrip() {
-    const from =
-        document.getElementById(
-            "fromSelect"
-        ).value;
-    const to =
-        document.getElementById(
-            "toSelect"
-        ).value;
-    const reason =
-        document.getElementById(
-            "reasonSelect"
-        ).value;
-    const kmInput =
-        document.getElementById(
-            "kmInput"
-        );
-    const km =
-        parseFloat(
-            kmInput.value.replace(
-                ",",
-                "."
-            )
-        );
-    if (!from || !to || !reason) {
-        alert(
-            "Bitte alle Felder ausfüllen."
-        );
-        return;
-    }
-    if (
-        isNaN(km) ||
-        km <= 0
-    ) {
-        alert(
-            "Bitte eine gültige Kilometerzahl eingeben."
-        );
-        kmInput.focus();
-        return;
-    }
-    const trips =
-        getCurrentTrips();
-    const oldLevel =
-        getCurrentLevel(
-            trips.length
-        );
-    const now =
-        new Date();
-    const trip = {
-        id:
-            Date.now(),
-        date:
-            now.toLocaleDateString(
-                "de-DE"
-            ),
-        isoDate:
-            now.toISOString(),
-        year:
-            selectedYear,
-        from,
-        to,
-        reason,
-        km,
-        cost:
-            km * 0.30
-    };
-    /*
-        Sicherheitshalber ein Array erzeugen.
-    */
-    if (
-        !Array.isArray(
-            allTrips[selectedYear]
-        )
-    ) {
-        allTrips[selectedYear] = [];
-    }
-    allTrips[selectedYear].push(
-        trip
-    );
-    saveAllTrips();
-    renderTrips();
-    renderYearSelect();
-    kmInput.value = "";
-    kmInput.focus();
-    showMotivation();
-    const newLevel =
-        getCurrentLevel(
-            getCurrentTrips().length
-        );
-    if (
-        newLevel.level >
-        oldLevel.level
-    ) {
-        setTimeout(
-            () => showLevelUp(
-                newLevel
-            ),
-            500
-        );
-    }
-    updateLevel();
-}
-/* =====================================================
-   LEVEL
-===================================================== */
-function getCurrentLevel(count) {
-    let current =
-        levels[0];
-    levels.forEach(
-        level => {
-            if (
-                count >=
-                level.required
-            ) {
-                current = level;
-            }
-        }
-    );
-    return current;
-}
-function getNextLevel(count) {
-    return levels.find(
-        level =>
-            level.required >
-            count
-    );
-}
-function updateLevel() {
-    const count =
-        getCurrentTrips().length;
-    const current =
-        getCurrentLevel(
-            count
-        );
-    const next =
-        getNextLevel(
-            count
-        );
-    document.getElementById(
-        "levelEmoji"
-    ).textContent =
-        current.emoji;
-    document.getElementById(
-        "levelName"
-    ).textContent =
-        current.name;
-    document.getElementById(
-        "levelNumber"
-    ).textContent =
-        "Level " +
-        current.level;
-    if (!next) {
-        document.getElementById(
-            "progressFill"
-        ).style.width =
-            "100%";
-        document.getElementById(
-            "progressText"
-        ).textContent =
-            "Maximales Level erreicht!";
-        document.getElementById(
-            "progressPercent"
-        ).textContent =
-            "100 %";
-        document.getElementById(
-            "nextLevelText"
-        ).textContent =
-            "🏆 Du bist eine Legende.";
-        return;
-    }
-    const progress =
-        (
-            (count - current.required)
-            /
-            (next.required - current.required)
-        ) * 100;
-    const safe =
-        Math.max(
-            0,
-            Math.min(
-                100,
-                progress
-            )
-        );
-    document.getElementById(
-        "progressFill"
-    ).style.width =
-        safe + "%";
-    document.getElementById(
-        "progressText"
-    ).textContent =
-        count +
-        " / " +
-        next.required +
-        " Fahrten";
-    document.getElementById(
-        "progressPercent"
-    ).textContent =
-        Math.round(
-            safe
-        ) +
-        " %";
-    const remaining =
-        next.required -
-        count;
-    document.getElementById(
-        "nextLevelText"
-    ).innerHTML = `
-        Noch
-        <strong style="color:var(--primary)">
-            ${remaining}
-        </strong>
-        Fahrt${remaining === 1 ? "" : "en"}
-        bis<br>
-        <strong style="color:var(--primary)">
-            ${next.emoji}
-            ${next.name}
-        </strong>
-    `;
-}
-/* =====================================================
-   MOTIVATION
-===================================================== */
-function showMotivation() {
-    const container =
-        document.getElementById(
-            "motivationContainer"
-        );
-    const random =
-        motivationMessages[
-            Math.floor(
-                Math.random() *
-                motivationMessages.length
-            )
-        ];
-    const popup =
-        document.createElement(
-            "div"
-        );
-    popup.className =
-        "motivation-popup";
-    popup.innerHTML = `
-        <span class="emoji">
-            ${random[0]}
-        </span>
-        ${random[1]}
-    `;
-    popup.style.left =
-        (
-            10 +
-            Math.random() * 70
-        ) + "%";
-    popup.style.top =
-        (
-            10 +
-            Math.random() * 65
-        ) + "%";
-    container.appendChild(
-        popup
-    );
-    setTimeout(
-        () => popup.remove(),
-        4500
-    );
-}
-/* =====================================================
-   LEVEL-UP
-===================================================== */
-function showLevelUp(level) {
-    const popup =
-        document.createElement(
-            "div"
-        );
-    popup.className =
-        "level-up-popup";
-    popup.innerHTML = `
-        <div class="level-up-box">
-            <div class="big-emoji">
-                ${level.emoji}
-            </div>
-            <h2>
-                LEVEL UP!
-            </h2>
-            <p>
-                Du hast Level
-                ${level.level}
-                erreicht!
-                <br><br>
-                Ab sofort bist du offiziell:
-                <br><br>
-                <strong
-                    style="
-                    color:var(--primary);
-                    font-size:20px;
-                    "
-                >
-                    ${level.name}
-                </strong>
-            </p>
-            <button
-                class="level-up-close"
-                onclick="this.closest('.level-up-popup').remove()"
-            >
-                Weiter so! 🚗
-            </button>
-        </div>
-    `;
-    popup.addEventListener(
-        "click",
-        event => {
-            if (
-                event.target === popup
-            ) {
-                popup.remove();
-            }
-        }
-    );
-    document.body.appendChild(
-        popup
-    );
-}
-/* =====================================================
-   TABELLE
-===================================================== */
-function renderTrips() {
-    const tbody =
-        document.getElementById(
-            "tripTableBody"
-        );
-    tbody.innerHTML = "";
-    const all =
-        getCurrentTrips();
-    const month =
-        document.getElementById(
-            "monthSelect"
-        ).value;
-    let filtered =
-        all;
-    if (
-        month !== "all"
-    ) {
-        filtered =
-            all.filter(
-                trip => {
-                    const date =
-                        new Date(
-                            trip.isoDate
-                        );
-                    return (
-                        date.getMonth()
-                        ===
-                        Number(month)
-                    );
-                }
-            );
-    }
-    /*
-        Neueste Fahrt zuerst.
-    */
-    filtered =
-        [...filtered].reverse();
-    if (
-        filtered.length === 0
-    ) {
-        tbody.innerHTML = `
-            <tr>
-                <td
-                    colspan="7"
-                    class="empty"
-                >
-                    ${
-                        month === "all"
-                        ? `Für ${selectedYear} gibt es noch keine Fahrten.`
-                        : "Für diesen Monat gibt es keine Fahrten."
-                    }
-                </td>
-            </tr>
-        `;
+        .sort((a,b) => b-a)
+        .forEach(year => {
+
+            const option =
+                document.createElement("option");
+
+            option.value = year;
+
+            option.textContent = year;
+
+            select.appendChild(option);
+
+        });
+
+
+    if (years.has(Number(oldValue))) {
+
+        select.value = oldValue;
+
     } else {
-        filtered.forEach(
-            trip => {
-                const row =
-                    document.createElement(
-                        "tr"
-                    );
-                row.innerHTML = `
-                    <td>
-                        ${escapeHTML(trip.date)}
-                    </td>
-                    <td>
-                        ${escapeHTML(trip.from)}
-                    </td>
-                    <td>
-                        ${escapeHTML(trip.to)}
-                    </td>
-                    <td>
-                        ${escapeHTML(trip.reason)}
-                    </td>
-                    <td>
-                        ${formatNumber(trip.km)}
-                        km
-                    </td>
-                    <td>
-                        <strong>
-                            ${formatCurrency(trip.cost)}
-                        </strong>
-                    </td>
-                    <td>
-                        <button
-                            class="delete-btn"
-                            onclick="deleteTrip(${trip.id})"
-                            title="Fahrt löschen"
-                        >
-                            ×
-                        </button>
-                    </td>
-                `;
-                tbody.appendChild(
-                    row
-                );
-            }
-        );
+
+        select.value = currentYear;
+
     }
-    updateSummary(
-        filtered
-    );
-    updatePrintTitle();
+
 }
-/* =====================================================
-   SUMMARY
-===================================================== */
-function updateSummary(trips) {
-    const totalKm =
-        trips.reduce(
-            (sum, trip) =>
-                sum +
-                Number(trip.km),
-            0
+
+
+function getSelectedTrips() {
+
+    const year =
+        Number(document.getElementById("yearFilter").value);
+
+    const month =
+        document.getElementById("monthFilter").value;
+
+
+    let trips =
+        tripsByYear[year] || [];
+
+
+    if (month !== "all") {
+
+        const monthNumber =
+            Number(month);
+
+        trips =
+            trips.filter(trip => {
+
+                const date =
+                    new Date(trip.date + "T12:00:00");
+
+                return date.getMonth() === monthNumber;
+
+            });
+
+    }
+
+
+    return [...trips]
+        .sort((a,b) =>
+            new Date(b.date) - new Date(a.date)
         );
+
+}
+
+
+/* =========================================================
+   RENDER
+========================================================= */
+
+function renderAll() {
+
+    renderSummary();
+
+    renderTable();
+
+    renderSettings();
+
+    renderLevel();
+
+}
+
+
+function renderSummary() {
+
+    const trips =
+        getSelectedTrips();
+
+
+    let totalKm = 0;
+
+    trips.forEach(trip => {
+
+        totalKm += Number(
+            trip.totalKm || trip.km || 0
+        );
+
+    });
+
+
     const totalCost =
-        trips.reduce(
-            (sum, trip) =>
-                sum +
-                Number(trip.cost),
-            0
-        );
+        totalKm * COST_PER_KM;
+
+
     const average =
         trips.length
-        ? totalKm / trips.length
-        : 0;
-    document.getElementById(
-        "totalTrips"
-    ).textContent =
-        trips.length;
-    document.getElementById(
-        "totalKm"
-    ).textContent =
-        formatNumber(
-            totalKm
-        ) +
-        " km";
-    document.getElementById(
-        "totalCost"
-    ).textContent =
-        formatCurrency(
-            totalCost
-        );
-    document.getElementById(
-        "averageKm"
-    ).textContent =
-        formatNumber(
-            average
-        ) +
-        " km";
+            ? totalKm / trips.length
+            : 0;
+
+
+    document.getElementById("summaryTrips")
+        .textContent = trips.length;
+
+
+    document.getElementById("summaryKm")
+        .textContent =
+        formatNumber(totalKm) + " km";
+
+
+    document.getElementById("summaryCost")
+        .textContent =
+        formatEuro(totalCost);
+
+
+    document.getElementById("summaryAverage")
+        .textContent =
+        formatNumber(average) + " km";
+
 }
-/* =====================================================
-   FAHRT LÖSCHEN
-===================================================== */
-function deleteTrip(id) {
+
+
+function renderTable() {
+
+    const tbody =
+        document.getElementById("tripTableBody");
+
+
+    const trips =
+        getSelectedTrips();
+
+
+    tbody.innerHTML = "";
+
+
+    if (!trips.length) {
+
+        tbody.innerHTML = `
+
+            <tr>
+                <td colspan="6" class="empty">
+                    Noch keine Fahrten für diesen Zeitraum gespeichert. 🚗
+                </td>
+            </tr>
+
+        `;
+
+        return;
+
+    }
+
+
+    trips.forEach(trip => {
+
+        const tr =
+            document.createElement("tr");
+
+
+        const route =
+            trip.route ||
+            createLegacyRoute(trip);
+
+
+        const totalKm =
+            Number(
+                trip.totalKm ||
+                trip.km ||
+                0
+            );
+
+
+        const cost =
+            totalKm * COST_PER_KM;
+
+
+        const date =
+            formatDate(trip.date);
+
+
+        const routeHtml =
+            route
+                .map((place, index) => {
+
+                    if (index === 0) {
+                        return escapeHtml(place);
+                    }
+
+                    return `
+                        <span class="route-arrow">→</span>
+                        ${escapeHtml(place)}
+                    `;
+
+                })
+                .join(" ");
+
+
+        tr.innerHTML = `
+
+            <td>
+                ${date}
+            </td>
+
+            <td>
+                <div class="route-cell">
+                    ${routeHtml}
+                </div>
+
+                <div class="route-small">
+                    ${getSegmentDescription(trip)}
+                </div>
+            </td>
+
+            <td>
+                ${escapeHtml(trip.reason || "Sonstiges")}
+            </td>
+
+            <td>
+                <strong>
+                    ${formatNumber(totalKm)} km
+                </strong>
+            </td>
+
+            <td>
+                <strong>
+                    ${formatEuro(cost)}
+                </strong>
+            </td>
+
+            <td class="delete-col">
+
+                <button
+                    class="danger-btn"
+                    onclick="deleteTrip('${trip.id}', '${trip.date}')"
+                >
+                    Löschen
+                </button>
+
+            </td>
+
+        `;
+
+
+        tbody.appendChild(tr);
+
+    });
+
+}
+
+
+function createLegacyRoute(trip) {
+
+    const route = [];
+
+    if (trip.from) route.push(trip.from);
+    if (trip.to) route.push(trip.to);
+
+    return route;
+
+}
+
+
+function getSegmentDescription(trip) {
+
+    if (!trip.kmSegments || !trip.kmSegments.length) {
+        return "";
+    }
+
+    return trip.kmSegments
+        .map(km => formatNumber(km) + " km")
+        .join(" · ");
+
+}
+
+
+/* =========================================================
+   LÖSCHEN
+========================================================= */
+
+function deleteTrip(id, date) {
+
+    if (!confirm("Diese Fahrt wirklich löschen?")) {
+        return;
+    }
+
+
+    const year =
+        new Date(date).getFullYear();
+
+
+    if (!tripsByYear[year]) return;
+
+
+    tripsByYear[year] =
+        tripsByYear[year]
+            .filter(trip =>
+                String(trip.id) !== String(id)
+            );
+
+
+    saveData();
+
+    renderAll();
+
+}
+
+
+function deleteAllTrips() {
+
+    const year =
+        Number(document.getElementById("yearFilter").value);
+
+
+    const trips =
+        tripsByYear[year] || [];
+
+
+    if (!trips.length) {
+
+        alert("Für dieses Jahr sind keine Fahrten gespeichert.");
+
+        return;
+
+    }
+
+
+    const confirmed =
+        confirm(
+            `Wirklich ALLE ${trips.length} Fahrten aus ${year} löschen?`
+        );
+
+
+    if (!confirmed) return;
+
+
+    delete tripsByYear[year];
+
+    saveData();
+
+    renderAll();
+
+}
+
+
+/* =========================================================
+   LEVELSYSTEM
+========================================================= */
+
+function getAllTripsCount() {
+
+    return Object.values(tripsByYear)
+        .reduce(
+            (sum, trips) =>
+                sum + trips.length,
+            0
+        );
+
+}
+
+
+function getLevel(count) {
+
+    let current =
+        LEVELS[0];
+
+    let index = 0;
+
+
+    LEVELS.forEach((level, i) => {
+
+        if (count >= level.min) {
+
+            current = level;
+            index = i;
+
+        }
+
+    });
+
+
+    const next =
+        LEVELS[index + 1] || null;
+
+
+    return {
+        ...current,
+        index,
+        next
+    };
+
+}
+
+
+function renderLevel() {
+
+    const count =
+        getAllTripsCount();
+
+
+    const level =
+        getLevel(count);
+
+
+    document.getElementById("levelNumber")
+        .textContent =
+        `Level ${level.index + 1}`;
+
+
+    document.getElementById("levelName")
+        .textContent =
+        level.name;
+
+
+    document.getElementById("levelCurrent")
+        .textContent =
+        `${count} Fahrten`;
+
+
+    const progressBar =
+        document.getElementById("levelProgress");
+
+
+    if (!level.next) {
+
+        progressBar.style.width = "100%";
+
+        document.getElementById("levelNext")
+            .textContent =
+            "Maximales Level erreicht! 👑";
+
+        return;
+
+    }
+
+
+    const currentMin =
+        level.min;
+
+
+    const nextMin =
+        level.next.min;
+
+
+    const progress =
+        ((count - currentMin) /
+            (nextMin - currentMin)) * 100;
+
+
+    progressBar.style.width =
+        Math.min(100, Math.max(0, progress)) + "%";
+
+
+    const remaining =
+        nextMin - count;
+
+
+    document.getElementById("levelNext")
+        .textContent =
+        `${remaining} Fahrten bis zum nächsten Level`;
+
+}
+
+
+function showLevelUp(level) {
+
+    document.getElementById("newLevelName")
+        .textContent =
+        level.name;
+
+
+    document.getElementById("levelModal")
+        .classList.remove("hidden");
+
+}
+
+
+function closeLevelModal(event) {
+
     if (
-        !confirm(
-            "Diese Fahrt wirklich löschen?"
-        )
+        event &&
+        event.target !== event.currentTarget
     ) {
         return;
     }
-    allTrips[selectedYear] =
-        getCurrentTrips().filter(
-            trip =>
-                trip.id !== id
-        );
-    saveAllTrips();
-    renderTrips();
+
+    document.getElementById("levelModal")
+        .classList.add("hidden");
+
 }
-/* =====================================================
-   ALLE FAHRTEN DES AUSGEWÄHLTEN JAHRES LÖSCHEN
-===================================================== */
-function deleteAllTrips() {
-    const count =
-        getCurrentTrips().length;
-    if (!count) {
-        alert(
-            "Für dieses Jahr gibt es keine Fahrten."
-        );
-        return;
-    }
-    const confirmation =
-        confirm(
-            `Wirklich alle ${count} Fahrten aus ${selectedYear} löschen?`
-        );
-    if (!confirmation) {
-        return;
-    }
-    delete allTrips[selectedYear];
-    saveAllTrips();
-    renderTrips();
-}
-/* =====================================================
-   EXCEL / CSV
-===================================================== */
-function exportCSV() {
-    const trips =
-        getFilteredTrips();
-    if (!trips.length) {
-        alert(
-            "Es gibt für die aktuelle Auswahl keine Fahrten zum Exportieren."
-        );
-        return;
-    }
-    const month =
-        document.getElementById(
-            "monthSelect"
-        ).value;
-    const monthName =
-        month === "all"
-        ? "Gesamtjahr"
-        : document.getElementById(
-            "monthSelect"
-          ).selectedOptions[0].textContent;
-    let csv =
-        "Oma-Fahrtenbuch\n";
-    csv +=
-        `Jahr;${selectedYear}\n`;
-    csv +=
-        `Zeitraum;${monthName}\n\n`;
-    csv +=
-        "Datum;Abfahrtsort;Ankunftsort;Grund der Fahrt;Gefahrene KM;Kosten (€)\n";
-    trips.forEach(
-        trip => {
-            csv += [
-                trip.date,
-                trip.from,
-                trip.to,
-                trip.reason,
-                String(
-                    trip.km
-                ).replace(
-                    ".",
-                    ","
-                ),
-                Number(
-                    trip.cost
-                )
-                .toFixed(2)
-                .replace(
-                    ".",
-                    ","
-                )
-            ]
-            .map(
-                value =>
-                    `"${String(value)
-                        .replace(
-                            /"/g,
-                            '""'
-                        )}"`
+
+
+/* =========================================================
+   MOTIVATION
+========================================================= */
+
+function showMotivation() {
+
+    const old =
+        document.querySelector(".popup");
+
+    if (old) old.remove();
+
+
+    const message =
+        MOTIVATIONAL_MESSAGES[
+            Math.floor(
+                Math.random() *
+                MOTIVATIONAL_MESSAGES.length
             )
-            .join(";");
-            csv += "\n";
-        }
-    );
-    const totalKm =
-        trips.reduce(
-            (sum, trip) =>
-                sum +
-                Number(trip.km),
-            0
-        );
-    const totalCost =
-        trips.reduce(
-            (sum, trip) =>
-                sum +
-                Number(trip.cost),
-            0
-        );
-    csv += "\n";
-    csv +=
-        `"GESAMT";;;;${String(totalKm).replace(".", ",")};${totalCost.toFixed(2).replace(".", ",")}`;
+        ];
+
+
+    const popup =
+        document.createElement("div");
+
+
+    popup.className = "popup";
+
+    popup.textContent = message;
+
+
+    document.body.appendChild(popup);
+
+
+    setTimeout(() => {
+
+        popup.remove();
+
+    }, 4500);
+
+}
+
+
+/* =========================================================
+   CSV / EXCEL
+========================================================= */
+
+function exportCSV() {
+
+    const trips =
+        getSelectedTrips();
+
+
+    const year =
+        document.getElementById("yearFilter").value;
+
+
+    const month =
+        document.getElementById("monthFilter");
+
+
+    const monthName =
+        month.options[month.selectedIndex].text;
+
+
+    let totalKm = 0;
+
+
+    const rows = [
+
+        [
+            "Datum",
+            "Start",
+            "Ziel 1",
+            "Ziel 2",
+            "Rückkehr zum Start",
+            "Strecke",
+            "Grund",
+            "Kilometer",
+            "Erstattung (€)"
+        ]
+
+    ];
+
+
+    trips.forEach(trip => {
+
+        const route =
+            trip.route ||
+            createLegacyRoute(trip);
+
+
+        const km =
+            Number(
+                trip.totalKm ||
+                trip.km ||
+                0
+            );
+
+
+        totalKm += km;
+
+
+        rows.push([
+
+            formatDate(trip.date),
+
+            route[0] || "",
+
+            route[1] || "",
+
+            route[2] || "",
+
+            route.length > 2 &&
+            route[route.length - 1] === route[0]
+                ? "Ja"
+                : "Nein",
+
+            route.join(" → "),
+
+            trip.reason || "",
+
+            formatNumber(km),
+
+            formatNumber(km * COST_PER_KM)
+
+        ]);
+
+    });
+
+
+    rows.push([]);
+
+    rows.push([
+        "GESAMT",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        formatNumber(totalKm),
+        formatNumber(totalKm * COST_PER_KM)
+    ]);
+
+
+    const csv =
+        rows
+            .map(row =>
+                row
+                    .map(value =>
+                        `"${String(value)
+                            .replace(/"/g, '""')}"`
+                    )
+                    .join(";")
+            )
+            .join("\r\n");
+
+
     const blob =
         new Blob(
-            [
-                "\uFEFF" +
-                csv
-            ],
+            ["\ufeff" + csv],
             {
                 type:
                     "text/csv;charset=utf-8;"
             }
         );
+
+
     const url =
-        URL.createObjectURL(
-            blob
-        );
+        URL.createObjectURL(blob);
+
+
     const link =
-        document.createElement(
-            "a"
-        );
-    link.href =
-        url;
+        document.createElement("a");
+
+
+    link.href = url;
+
     link.download =
-        `Oma-Fahrtenbuch-${selectedYear}-${monthName}.csv`;
-    document.body.appendChild(
-        link
-    );
+        `Oma-Fahrtenbuch-${year}-${monthName}.csv`;
+
+
+    document.body.appendChild(link);
+
     link.click();
+
     link.remove();
-    URL.revokeObjectURL(
-        url
-    );
+
+    URL.revokeObjectURL(url);
+
 }
-/* =====================================================
-   FILTERDATEN
-===================================================== */
-function getFilteredTrips() {
-    const all =
-        getCurrentTrips();
-    const month =
-        document.getElementById(
-            "monthSelect"
-        ).value;
-    if (
-        month === "all"
-    ) {
-        return all;
-    }
-    return all.filter(
-        trip => {
-            return (
-                new Date(
-                    trip.isoDate
-                ).getMonth()
-                ===
-                Number(month)
-            );
-        }
-    );
-}
-/* =====================================================
+
+
+/* =========================================================
    DRUCKEN
-===================================================== */
-function updatePrintTitle() {
-    const month =
-        document.getElementById(
-            "monthSelect"
-        ).value;
-    const monthName =
-        month === "all"
-        ? "Gesamtjahr"
-        : document.getElementById(
-            "monthSelect"
-          ).selectedOptions[0].textContent;
-    document.getElementById(
-        "printTitle"
-    ).textContent =
-        `Oma-Fahrtenbuch ${selectedYear} – ${monthName}`;
-}
-function printYear() {
-    updatePrintTitle();
+========================================================= */
+
+function printOverview() {
+
     window.print();
+
 }
-/* =====================================================
-   BACKUP HERUNTERLADEN
-===================================================== */
+
+
+/* =========================================================
+   BACKUP
+========================================================= */
+
 function downloadBackup() {
+
     const backup = {
+
         app:
             "Oma-Fahrtenbuch",
+
         version:
-            2,
+            3,
+
         created:
             new Date().toISOString(),
-        selectedYear,
+
+        selectedYear:
+            document.getElementById("yearFilter").value,
+
         places,
+
         reasons,
-        trips:
-            allTrips
+
+        tripsByYear
+
     };
-    const json =
-        JSON.stringify(
-            backup,
-            null,
-            2
-        );
+
+
     const blob =
         new Blob(
-            [json],
+            [
+                JSON.stringify(
+                    backup,
+                    null,
+                    2
+                )
+            ],
             {
                 type:
                     "application/json"
             }
         );
+
+
     const url =
-        URL.createObjectURL(
-            blob
-        );
+        URL.createObjectURL(blob);
+
+
     const link =
-        document.createElement(
-            "a"
-        );
-    link.href =
-        url;
+        document.createElement("a");
+
+
+    link.href = url;
+
     link.download =
-        `Oma-Fahrtenbuch-Backup-${new Date().toISOString().slice(0,10)}.json`;
-    document.body.appendChild(
-        link
-    );
+        `oma-fahrtenbuch-backup-${new Date()
+            .toISOString()
+            .slice(0,10)}.json`;
+
+
+    document.body.appendChild(link);
+
     link.click();
+
     link.remove();
-    URL.revokeObjectURL(
-        url
-    );
-    showSimpleNotice(
-        "💾 Backup gespeichert!"
-    );
+
+    URL.revokeObjectURL(url);
+
 }
-/* =====================================================
-   BACKUP WIEDERHERSTELLEN
-===================================================== */
+
+
 function restoreBackup(event) {
+
     const file =
         event.target.files[0];
-    if (!file) {
-        return;
-    }
+
+
+    if (!file) return;
+
+
     const reader =
         new FileReader();
-    reader.onload =
-        function(e) {
-            try {
-                const backup =
-                    JSON.parse(
-                        e.target.result
-                    );
-                /*
-                    Sicherheitsprüfung.
-                */
-                if (
-                    backup.app !==
-                    "Oma-Fahrtenbuch"
-                ) {
-                    throw new Error(
-                        "Keine gültige Oma-Fahrtenbuch-Datei."
-                    );
-                }
-                if (
-                    !backup.trips ||
-                    typeof backup.trips !== "object"
-                ) {
-                    throw new Error(
-                        "Die Backup-Datei enthält keine gültigen Fahrtdaten."
-                    );
-                }
-                const confirmation =
-                    confirm(
-                        "Backup einspielen?\n\n" +
-                        "Die aktuell gespeicherten Daten werden durch die Daten aus dem Backup ersetzt."
-                    );
-                if (!confirmation) {
-                    event.target.value = "";
-                    return;
-                }
-                allTrips =
-                    backup.trips;
-                if (
-                    Array.isArray(
-                        backup.places
-                    )
-                ) {
-                    places =
-                        backup.places;
-                }
-                if (
-                    Array.isArray(
-                        backup.reasons
-                    )
-                ) {
-                    reasons =
-                        backup.reasons;
-                }
-                if (
-                    backup.selectedYear
-                ) {
-                    selectedYear =
-                        Number(
-                            backup.selectedYear
-                        );
-                }
-                saveAllTrips();
-                localStorage.setItem(
-                    "omaPlaces",
-                    JSON.stringify(
-                        places
-                    )
+
+
+    reader.onload = function(e) {
+
+        try {
+
+            const backup =
+                JSON.parse(e.target.result);
+
+
+            if (
+                !backup ||
+                backup.app !== "Oma-Fahrtenbuch" ||
+                !backup.tripsByYear
+            ) {
+
+                throw new Error(
+                    "Ungültiges Backup."
                 );
-                localStorage.setItem(
-                    "omaReasons",
-                    JSON.stringify(
-                        reasons
-                    )
-                );
-                localStorage.setItem(
-                    "omaSelectedYear",
-                    selectedYear
-                );
-                renderYearSelect();
-                renderDropdowns();
-                renderSettings();
-                renderTrips();
-                updateLevel();
-                alert(
-                    "✅ Backup erfolgreich wiederhergestellt!"
-                );
-            } catch(error) {
-                alert(
-                    "❌ Das Backup konnte nicht gelesen werden.\n\n" +
-                    error.message
-                );
+
             }
+
+
+            const confirmed =
+                confirm(
+                    "Das Backup wird eingelesen und ersetzt deine aktuell gespeicherten Fahrten. Fortfahren?"
+                );
+
+
+            if (!confirmed) return;
+
+
+            tripsByYear =
+                backup.tripsByYear || {};
+
+
+            places =
+                backup.places?.length
+                    ? backup.places
+                    : [...DEFAULT_PLACES];
+
+
+            reasons =
+                backup.reasons?.length
+                    ? backup.reasons
+                    : [...DEFAULT_REASONS];
+
+
+            saveData();
+
+            saveSettings();
+
+            populateYears();
+
+            populatePlaces();
+
+            populateReasons();
+
+            renderAll();
+
+
+            if (backup.selectedYear) {
+
+                const yearSelect =
+                    document.getElementById("yearFilter");
+
+                if (
+                    [...yearSelect.options]
+                        .some(o =>
+                            o.value ===
+                            String(backup.selectedYear)
+                        )
+                ) {
+                    yearSelect.value =
+                        backup.selectedYear;
+                }
+
+            }
+
+
+            renderAll();
+
+
+            alert(
+                "Backup erfolgreich wiederhergestellt! 🎉"
+            );
+
+
+        } catch (error) {
+
+            console.error(error);
+
+            alert(
+                "Das Backup konnte nicht gelesen werden."
+            );
+
+        } finally {
+
             event.target.value = "";
-        };
-    reader.readAsText(
-        file
-    );
-}
-/* =====================================================
-   AUSWAHL-MÖGLICHKEITEN
-===================================================== */
-function addPlace() {
-    const input =
-        document.getElementById(
-            "newPlace"
-        );
-    const value =
-        input.value.trim();
-    if (!value) {
-        return;
-    }
-    if (
-        places.includes(value)
-    ) {
-        alert(
-            "Dieser Ort ist bereits vorhanden."
-        );
-        return;
-    }
-    places.push(
-        value
-    );
-    saveSettings();
-    renderDropdowns();
-    renderSettings();
-    input.value = "";
-}
-function removePlace(index) {
-    if (
-        !confirm(
-            `„${places[index]}“ aus der Liste entfernen?`
-        )
-    ) {
-        return;
-    }
-    places.splice(
-        index,
-        1
-    );
-    saveSettings();
-    renderDropdowns();
-    renderSettings();
-}
-function addReason() {
-    const input =
-        document.getElementById(
-            "newReason"
-        );
-    const value =
-        input.value.trim();
-    if (!value) {
-        return;
-    }
-    if (
-        reasons.includes(value)
-    ) {
-        alert(
-            "Dieser Grund ist bereits vorhanden."
-        );
-        return;
-    }
-    reasons.push(
-        value
-    );
-    saveSettings();
-    renderDropdowns();
-    renderSettings();
-    input.value = "";
-}
-function removeReason(index) {
-    if (
-        !confirm(
-            `„${reasons[index]}“ aus der Liste entfernen?`
-        )
-    ) {
-        return;
-    }
-    reasons.splice(
-        index,
-        1
-    );
-    saveSettings();
-    renderDropdowns();
-    renderSettings();
-}
-function saveSettings() {
-    localStorage.setItem(
-        "omaPlaces",
-        JSON.stringify(
-            places
-        )
-    );
-    localStorage.setItem(
-        "omaReasons",
-        JSON.stringify(
-            reasons
-        )
-    );
-}
-/* =====================================================
-   SETTINGS RENDERN
-===================================================== */
-function renderSettings() {
-    const placesList =
-        document.getElementById(
-            "placesList"
-        );
-    const reasonsList =
-        document.getElementById(
-            "reasonsList"
-        );
-    placesList.innerHTML =
-        "";
-    places.forEach(
-        (place, index) => {
-            placesList.innerHTML += `
-                <div class="option-item">
-                    <span>
-                        ${escapeHTML(place)}
-                    </span>
-                    <button
-                        class="remove-option"
-                        onclick="removePlace(${index})"
-                    >
-                        ×
-                    </button>
-                </div>
-            `;
+
         }
-    );
-    reasonsList.innerHTML =
-        "";
-    reasons.forEach(
-        (reason, index) => {
-            reasonsList.innerHTML += `
-                <div class="option-item">
-                    <span>
-                        ${escapeHTML(reason)}
-                    </span>
-                    <button
-                        class="remove-option"
-                        onclick="removeReason(${index})"
-                    >
-                        ×
-                    </button>
-                </div>
-            `;
-        }
-    );
+
+    };
+
+
+    reader.readAsText(file);
+
 }
-/* =====================================================
-   THEME
-===================================================== */
-function toggleTheme() {
-    document.body.classList.toggle(
-        "dark"
-    );
-    const dark =
-        document.body.classList.contains(
-            "dark"
-        );
+
+
+/* =========================================================
+   DESIGN
+========================================================= */
+
+function toggleDarkMode() {
+
+    document.body.classList.toggle("dark");
+
+
+    const isDark =
+        document.body.classList.contains("dark");
+
+
     localStorage.setItem(
-        "omaTheme",
-        dark
-            ? "dark"
-            : "light"
+        THEME_KEY,
+        isDark ? "dark" : "light"
     );
-    updateThemeButton();
+
 }
+
+
 function loadTheme() {
-    if (
-        localStorage.getItem(
-            "omaTheme"
-        ) === "dark"
-    ) {
-        document.body.classList.add(
-            "dark"
-        );
+
+    const theme =
+        localStorage.getItem(THEME_KEY);
+
+
+    if (theme === "dark") {
+        document.body.classList.add("dark");
     }
-    updateThemeButton();
+
 }
-function updateThemeButton() {
-    document.getElementById(
-        "themeButton"
-    ).textContent =
-        document.body.classList.contains(
-            "dark"
-        )
-        ? "☀️ Hell"
-        : "🌙 Dunkel";
-}
-/* =====================================================
-   PWA / APP INSTALLATION
-===================================================== */
+
+
+/* =========================================================
+   INSTALL / PWA
+========================================================= */
+
 let deferredInstallPrompt = null;
+
+
 window.addEventListener(
     "beforeinstallprompt",
     event => {
+
         event.preventDefault();
-        deferredInstallPrompt =
-            event;
-        document.getElementById(
-            "installButton"
-        ).classList.remove(
-            "hidden"
-        );
+
+        deferredInstallPrompt = event;
+
     }
 );
+
+
 async function installApp() {
+
     if (!deferredInstallPrompt) {
+
         alert(
-            "Die App kann über das Browser-Menü zum Home-Bildschirm hinzugefügt werden."
+            "Auf dem iPhone kannst du die App über Safari → Teilen → Zum Home-Bildschirm hinzufügen installieren."
         );
+
         return;
+
     }
+
+
     deferredInstallPrompt.prompt();
-    const result =
-        await deferredInstallPrompt.userChoice;
-    if (
-        result.outcome ===
-        "accepted"
-    ) {
-        document.getElementById(
-            "installButton"
-        ).classList.add(
-            "hidden"
-        );
-    }
-    deferredInstallPrompt =
-        null;
+
+    await deferredInstallPrompt.userChoice;
+
+    deferredInstallPrompt = null;
+
 }
-/* =====================================================
-   SERVICE WORKER
-===================================================== */
+
+
 function registerServiceWorker() {
+
     if (
         "serviceWorker" in navigator
     ) {
+
         navigator.serviceWorker
-            .register(
-                "service-worker.js"
-            )
-            .catch(
-                () => {
-                    /*
-                        Im CodePen-Modus kann dieser Fehler
-                        auftreten. Für die normale Website
-                        ist der Service Worker relevant.
-                    */
-                }
-            );
+            .register("./service-worker.js")
+            .then(() => {
+
+                console.log(
+                    "Service Worker registriert."
+                );
+
+            })
+            .catch(error => {
+
+                console.error(
+                    "Service Worker Fehler:",
+                    error
+                );
+
+            });
+
     }
+
 }
-/* =====================================================
-   KLEINE INFO-NACHRICHT
-===================================================== */
-function showSimpleNotice(text) {
-    const container =
-        document.getElementById(
-            "motivationContainer"
-        );
-    const popup =
-        document.createElement(
-            "div"
-        );
-    popup.className =
-        "motivation-popup";
-    popup.innerHTML =
-        text;
-    popup.style.left =
-        "50%";
-    popup.style.top =
-        "15%";
-    popup.style.transform =
-        "translateX(-50%)";
-    container.appendChild(
-        popup
-    );
-    setTimeout(
-        () => popup.remove(),
-        4500
-    );
-}
-/* =====================================================
-   FORMATIERUNG
-===================================================== */
+
+
+/* =========================================================
+   HILFSFUNKTIONEN
+========================================================= */
+
 function formatNumber(number) {
-    return Number(
-        number
-    ).toLocaleString(
-        "de-DE",
-        {
-            minimumFractionDigits: 0,
-            maximumFractionDigits: 1
-        }
+
+    return Number(number || 0)
+        .toLocaleString(
+            "de-DE",
+            {
+                minimumFractionDigits: 1,
+                maximumFractionDigits: 1
+            }
+        );
+
+}
+
+
+function formatEuro(number) {
+
+    return Number(number || 0)
+        .toLocaleString(
+            "de-DE",
+            {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }
+        ) + " €";
+
+}
+
+
+function formatDate(date) {
+
+    if (!date) return "";
+
+    const d =
+        new Date(date + "T12:00:00");
+
+    return d.toLocaleDateString(
+        "de-DE"
     );
+
 }
-function formatCurrency(number) {
-    return Number(
-        number
-    ).toLocaleString(
-        "de-DE",
-        {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
-        }
-    ) + " €";
+
+
+function escapeHtml(value) {
+
+    return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
 }
-/* =====================================================
-   HTML ESCAPING
-===================================================== */
-function escapeHTML(value) {
-    return String(
-        value
-    )
-    .replace(
-        /&/g,
-        "&amp;"
-    )
-    .replace(
-        /</g,
-        "&lt;"
-    )
-    .replace(
-        />/g,
-        "&gt;"
-    )
-    .replace(
-        /"/g,
-        "&quot;"
-    )
-    .replace(
-        /'/g,
-        "&#039;"
-    );
+
+
+function scrollToSettings() {
+
+    document.getElementById("settings")
+        .scrollIntoView({
+            behavior: "smooth"
+        });
+
 }
+
+
+/* =========================================================
+   INITIALER RENDER
+========================================================= */
+
+renderSettings();
+
 </script>
+
 </body>
 </html>

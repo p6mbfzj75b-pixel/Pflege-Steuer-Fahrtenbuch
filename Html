@@ -1,0 +1,2670 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+<meta
+    name="theme-color"
+    content="#d41475"
+>
+<meta
+    name="apple-mobile-web-app-capable"
+    content="yes"
+>
+<meta
+    name="apple-mobile-web-app-status-bar-style"
+    content="default"
+>
+<meta
+    name="apple-mobile-web-app-title"
+    content="Oma-Fahrtenbuch"
+>
+<title>Oma-Fahrtenbuch 🌸</title>
+<!--
+    Für die PWA-Installation:
+    Diese Datei muss später zusammen mit manifest.json
+    und service-worker.js auf derselben Website liegen.
+-->
+<link rel="manifest" href="manifest.json">
+<style>
+:root {
+    --bg: #fff7fb;
+    --card: #ffffff;
+    --text: #351d2d;
+    --muted: #8a687c;
+    --primary: #d41475;
+    --primary-dark: #ad0e5f;
+    --secondary: #f7d4e7;
+    --border: #edc8dc;
+    --success: #4caf7d;
+    --danger: #d94b6a;
+    --input: #fffafd;
+    --shadow: 0 8px 25px rgba(160, 35, 100, 0.10);
+}
+body.dark {
+    --bg: #0d1724;
+    --card: #142538;
+    --text: #edf7ff;
+    --muted: #8eabc0;
+    --primary: #54c9ff;
+    --primary-dark: #2db2ed;
+    --secondary: #1c3b55;
+    --border: #28506c;
+    --success: #55d69b;
+    --danger: #ff6b8a;
+    --input: #102030;
+    --shadow: 0 8px 25px rgba(0,0,0,0.25);
+}
+* {
+    box-sizing: border-box;
+}
+body {
+    margin: 0;
+    padding: 20px;
+    background: var(--bg);
+    color: var(--text);
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Arial,
+        sans-serif;
+    transition: 0.25s ease;
+}
+.app {
+    max-width: 1200px;
+    margin: auto;
+}
+/* =====================================================
+   HEADER
+===================================================== */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+.title-area h1 {
+    margin: 0;
+    font-size: 28px;
+}
+.title-area p {
+    margin: 5px 0 0;
+    color: var(--muted);
+    font-size: 14px;
+}
+.header-buttons {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+.theme-button,
+.install-button {
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--text);
+    border-radius: 12px;
+    padding: 10px 14px;
+    cursor: pointer;
+    font-size: 14px;
+    box-shadow: var(--shadow);
+}
+.install-button {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+}
+/* =====================================================
+   LEVEL
+===================================================== */
+.level-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
+}
+.level-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+}
+.level-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.level-emoji {
+    font-size: 38px;
+}
+.level-small {
+    color: var(--muted);
+    font-size: 12px;
+    margin-bottom: 3px;
+}
+.level-name {
+    font-size: 21px;
+    font-weight: 800;
+    color: var(--primary);
+}
+.level-number {
+    font-size: 14px;
+    color: var(--muted);
+    font-weight: 600;
+}
+.progress-container {
+    margin-top: 16px;
+}
+.progress-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 6px;
+}
+.progress-bar {
+    width: 100%;
+    height: 12px;
+    background: var(--secondary);
+    border-radius: 20px;
+    overflow: hidden;
+}
+.progress-fill {
+    height: 100%;
+    width: 0%;
+    background: var(--primary);
+    border-radius: 20px;
+    transition: width 0.6s ease;
+}
+/* =====================================================
+   JAHR / FILTER
+===================================================== */
+.filter-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 18px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
+}
+.filter-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+.filter-box label {
+    display: block;
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 6px;
+}
+/* =====================================================
+   SUMMARY
+===================================================== */
+.summary {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    margin-bottom: 20px;
+}
+.summary-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 18px;
+    box-shadow: var(--shadow);
+}
+.summary-label {
+    color: var(--muted);
+    font-size: 13px;
+    margin-bottom: 7px;
+}
+.summary-value {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--primary);
+}
+/* =====================================================
+   FORM
+===================================================== */
+.form-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 20px;
+    box-shadow: var(--shadow);
+    margin-bottom: 20px;
+}
+.form-card h2 {
+    margin: 0 0 16px;
+    font-size: 19px;
+}
+.form-grid {
+    display: grid;
+    grid-template-columns:
+        1fr
+        1fr
+        1.2fr
+        120px
+        130px;
+    gap: 12px;
+    align-items: end;
+}
+label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--muted);
+    margin-bottom: 6px;
+}
+input,
+select {
+    width: 100%;
+    height: 44px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 0 12px;
+    background: var(--input);
+    color: var(--text);
+    outline: none;
+    font-size: 14px;
+}
+input:focus,
+select:focus {
+    border-color: var(--primary);
+}
+.add-button {
+    height: 44px;
+    border: none;
+    border-radius: 10px;
+    background: var(--primary);
+    color: white;
+    font-weight: 700;
+    cursor: pointer;
+    padding: 0 18px;
+    transition: 0.2s;
+}
+.add-button:hover {
+    background: var(--primary-dark);
+    transform: translateY(-1px);
+}
+/* =====================================================
+   TABLE
+===================================================== */
+.table-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+}
+.table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 20px;
+    gap: 10px;
+}
+.table-header h2 {
+    margin: 0;
+    font-size: 19px;
+}
+.actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+.secondary-button {
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--text);
+    border-radius: 10px;
+    padding: 9px 12px;
+    cursor: pointer;
+    font-size: 13px;
+}
+.secondary-button:hover {
+    border-color: var(--primary);
+}
+.danger-button:hover {
+    border-color: var(--danger);
+    color: var(--danger);
+}
+.table-wrapper {
+    overflow-x: auto;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 850px;
+}
+th,
+td {
+    text-align: left;
+    padding: 12px 15px;
+    border-top: 1px solid var(--border);
+    font-size: 13px;
+}
+th {
+    color: var(--muted);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    background: var(--secondary);
+}
+td strong {
+    color: var(--primary);
+}
+.delete-btn {
+    border: none;
+    background: transparent;
+    color: var(--danger);
+    cursor: pointer;
+    font-size: 18px;
+}
+.empty {
+    text-align: center;
+    color: var(--muted);
+    padding: 35px;
+}
+/* =====================================================
+   BACKUP / EXPORT
+===================================================== */
+.tools-card {
+    margin-top: 20px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 20px;
+    box-shadow: var(--shadow);
+}
+.tools-card h2 {
+    margin: 0 0 6px;
+    font-size: 18px;
+}
+.tools-card > p {
+    color: var(--muted);
+    font-size: 13px;
+    margin-top: 0;
+}
+.tool-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+.tool-button {
+    min-height: 48px;
+    border: 1px solid var(--border);
+    background: var(--input);
+    color: var(--text);
+    border-radius: 12px;
+    cursor: pointer;
+    padding: 10px 14px;
+    text-align: left;
+}
+.tool-button:hover {
+    border-color: var(--primary);
+}
+/* =====================================================
+   SETTINGS
+===================================================== */
+.settings {
+    margin-top: 20px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 20px;
+    box-shadow: var(--shadow);
+}
+.settings h2 {
+    margin: 0 0 6px;
+    font-size: 18px;
+}
+.settings > p {
+    margin: 0 0 15px;
+    color: var(--muted);
+    font-size: 13px;
+}
+.dropdown-editor {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+.editor-box {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px;
+}
+.editor-box h3 {
+    margin: 0 0 10px;
+    font-size: 14px;
+}
+.option-list {
+    margin-bottom: 10px;
+}
+.option-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+}
+.remove-option {
+    border: none;
+    background: transparent;
+    color: var(--danger);
+    cursor: pointer;
+}
+.add-option {
+    display: flex;
+    gap: 6px;
+}
+.add-option input {
+    height: 38px;
+}
+.add-option button {
+    border: none;
+    background: var(--primary);
+    color: white;
+    border-radius: 8px;
+    padding: 0 12px;
+    cursor: pointer;
+}
+/* =====================================================
+   POPUPS
+===================================================== */
+#motivationContainer {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9999;
+    overflow: hidden;
+}
+.motivation-popup {
+    position: absolute;
+    background: var(--card);
+    color: var(--text);
+    border: 2px solid var(--primary);
+    border-radius: 18px;
+    padding: 15px 20px;
+    max-width: 320px;
+    box-shadow: 0 12px 35px rgba(0,0,0,0.18);
+    font-size: 15px;
+    font-weight: 700;
+    text-align: center;
+    animation:
+        popupIn 0.35s ease-out,
+        popupOut 0.5s ease-in 3.8s forwards;
+}
+.motivation-popup .emoji {
+    display: block;
+    font-size: 27px;
+    margin-bottom: 5px;
+}
+@keyframes popupIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.6) translateY(20px);
+    }
+    70% {
+        transform: scale(1.05) translateY(-3px);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+@keyframes popupOut {
+    to {
+        opacity: 0;
+        transform: translateY(-25px) scale(0.95);
+    }
+}
+/* =====================================================
+   LEVEL-UP
+===================================================== */
+.level-up-popup {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,0,0,0.45);
+    z-index: 10000;
+}
+.level-up-box {
+    background: var(--card);
+    color: var(--text);
+    width: min(90%, 430px);
+    padding: 30px;
+    border-radius: 25px;
+    text-align: center;
+    border: 3px solid var(--primary);
+    box-shadow: 0 20px 70px rgba(0,0,0,0.3);
+    animation: levelUp 0.5s cubic-bezier(.17,.67,.32,1.4);
+}
+.level-up-box .big-emoji {
+    font-size: 65px;
+}
+.level-up-box h2 {
+    margin: 10px 0 5px;
+    font-size: 25px;
+    color: var(--primary);
+}
+.level-up-box p {
+    color: var(--muted);
+    margin-bottom: 20px;
+}
+.level-up-close {
+    border: none;
+    background: var(--primary);
+    color: white;
+    padding: 11px 22px;
+    border-radius: 10px;
+    font-weight: 700;
+    cursor: pointer;
+}
+@keyframes levelUp {
+    0% {
+        opacity: 0;
+        transform: scale(0.5) rotate(-5deg);
+    }
+    70% {
+        transform: scale(1.05) rotate(1deg);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) rotate(0);
+    }
+}
+/* =====================================================
+   PRINT
+===================================================== */
+@media print {
+    body {
+        background: white !important;
+        color: black !important;
+        padding: 0;
+    }
+    .app {
+        max-width: none;
+    }
+    header,
+    .level-card,
+    .filter-card,
+    .form-card,
+    .tools-card,
+    .settings,
+    .footer-note,
+    .actions,
+    .delete-btn,
+    #motivationContainer {
+        display: none !important;
+    }
+    .summary {
+        grid-template-columns: repeat(4, 1fr);
+    }
+    .summary-card,
+    .table-card {
+        box-shadow: none;
+        border: 1px solid #ccc;
+    }
+    .table-card {
+        display: block;
+    }
+    .table-wrapper {
+        overflow: visible;
+    }
+    table {
+        min-width: 0;
+    }
+    th,
+    td {
+        color: black !important;
+        border-color: #ccc;
+    }
+    th {
+        background: #eee !important;
+    }
+    .print-title {
+        display: block !important;
+        font-size: 24px;
+        margin-bottom: 20px;
+    }
+}
+.print-title {
+    display: none;
+}
+/* =====================================================
+   MOBILE
+===================================================== */
+@media (max-width: 850px) {
+    body {
+        padding: 12px;
+    }
+    header {
+        align-items: flex-start;
+    }
+    .title-area h1 {
+        font-size: 23px;
+    }
+    .summary {
+        grid-template-columns: 1fr 1fr;
+    }
+    .form-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+    .form-grid .full-mobile {
+        grid-column: 1 / -1;
+    }
+    .add-button {
+        width: 100%;
+    }
+    .dropdown-editor {
+        grid-template-columns: 1fr;
+    }
+}
+@media (max-width: 520px) {
+    .header-buttons {
+        flex-direction: column;
+    }
+    .summary {
+        grid-template-columns: 1fr;
+    }
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+    .form-grid .full-mobile {
+        grid-column: auto;
+    }
+    .table-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+    .actions {
+        width: 100%;
+    }
+    .secondary-button {
+        flex: 1;
+    }
+    .motivation-popup {
+        left: 15px !important;
+        right: 15px !important;
+        bottom: 25px !important;
+        top: auto !important;
+        max-width: none;
+    }
+    .level-top {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .filter-grid,
+    .tool-grid {
+        grid-template-columns: 1fr;
+    }
+}
+/* =====================================================
+   HILFSKLASSE
+===================================================== */
+.hidden {
+    display: none !important;
+}
+</style>
+</head>
+<body>
+<div class="app">
+    <!-- =================================================
+         HEADER
+    ================================================= -->
+    <header>
+        <div class="title-area">
+            <h1>
+                🌸 Oma-Fahrtenbuch
+            </h1>
+            <p>
+                Jede Fahrt dokumentiert. Jede Oma-Fahrt ein kleiner Sieg.
+            </p>
+        </div>
+        <div class="header-buttons">
+            <button
+                class="install-button hidden"
+                id="installButton"
+                onclick="installApp()"
+            >
+                📱 App installieren
+            </button>
+            <button
+                class="theme-button"
+                onclick="toggleTheme()"
+                id="themeButton"
+            >
+                🌙 Dunkel
+            </button>
+        </div>
+    </header>
+    <!-- =================================================
+         DRUCKTITEL
+    ================================================= -->
+    <div
+        class="print-title"
+        id="printTitle"
+    >
+        Oma-Fahrtenbuch
+    </div>
+    <!-- =================================================
+         LEVEL
+    ================================================= -->
+    <section class="level-card">
+        <div class="level-top">
+            <div class="level-title">
+                <div
+                    class="level-emoji"
+                    id="levelEmoji"
+                >
+                    🌱
+                </div>
+                <div>
+                    <div class="level-small">
+                        Dein aktueller Rang
+                    </div>
+                    <div
+                        class="level-name"
+                        id="levelName"
+                    >
+                        Oma-Fahranfängerin
+                    </div>
+                    <div
+                        class="level-number"
+                        id="levelNumber"
+                    >
+                        Level 1
+                    </div>
+                </div>
+            </div>
+            <div
+                id="nextLevelText"
+                style="
+                    text-align:right;
+                    color:var(--muted);
+                    font-size:13px;
+                "
+            >
+                Erste Fahrt!
+            </div>
+        </div>
+        <div class="progress-container">
+            <div class="progress-info">
+                <span id="progressText">
+                    0 / 5 Fahrten
+                </span>
+                <span id="progressPercent">
+                    0 %
+                </span>
+            </div>
+            <div class="progress-bar">
+                <div
+                    class="progress-fill"
+                    id="progressFill"
+                ></div>
+            </div>
+        </div>
+    </section>
+    <!-- =================================================
+         JAHR + MONAT
+    ================================================= -->
+    <section class="filter-card">
+        <div class="filter-grid">
+            <div class="filter-box">
+                <label>
+                    📅 Jahr
+                </label>
+                <select
+                    id="yearSelect"
+                    onchange="changeYear()"
+                ></select>
+            </div>
+            <div class="filter-box">
+                <label>
+                    🔎 Monat anzeigen
+                </label>
+                <select
+                    id="monthSelect"
+                    onchange="renderTrips()"
+                >
+                    <option value="all">
+                        Ganzes Jahr
+                    </option>
+                    <option value="0">
+                        Januar
+                    </option>
+                    <option value="1">
+                        Februar
+                    </option>
+                    <option value="2">
+                        März
+                    </option>
+                    <option value="3">
+                        April
+                    </option>
+                    <option value="4">
+                        Mai
+                    </option>
+                    <option value="5">
+                        Juni
+                    </option>
+                    <option value="6">
+                        Juli
+                    </option>
+                    <option value="7">
+                        August
+                    </option>
+                    <option value="8">
+                        September
+                    </option>
+                    <option value="9">
+                        Oktober
+                    </option>
+                    <option value="10">
+                        November
+                    </option>
+                    <option value="11">
+                        Dezember
+                    </option>
+                </select>
+            </div>
+        </div>
+    </section>
+    <!-- =================================================
+         ÜBERSICHT
+    ================================================= -->
+    <section class="summary">
+        <div class="summary-card">
+            <div class="summary-label">
+                Fahrten
+            </div>
+            <div
+                class="summary-value"
+                id="totalTrips"
+            >
+                0
+            </div>
+        </div>
+        <div class="summary-card">
+            <div class="summary-label">
+                Gefahrene Kilometer
+            </div>
+            <div
+                class="summary-value"
+                id="totalKm"
+            >
+                0 km
+            </div>
+        </div>
+        <div class="summary-card">
+            <div class="summary-label">
+                Erstattungsbetrag
+            </div>
+            <div
+                class="summary-value"
+                id="totalCost"
+            >
+                0,00 €
+            </div>
+        </div>
+        <div class="summary-card">
+            <div class="summary-label">
+                Ø pro Fahrt
+            </div>
+            <div
+                class="summary-value"
+                id="averageKm"
+            >
+                0 km
+            </div>
+        </div>
+    </section>
+    <!-- =================================================
+         NEUE FAHRT
+    ================================================= -->
+    <section class="form-card">
+        <h2>
+            ➕ Neue Fahrt
+        </h2>
+        <div class="form-grid">
+            <div>
+                <label>
+                    Abfahrtsort
+                </label>
+                <select
+                    id="fromSelect"
+                ></select>
+            </div>
+            <div>
+                <label>
+                    Ankunftsort
+                </label>
+                <select
+                    id="toSelect"
+                ></select>
+            </div>
+            <div class="full-mobile">
+                <label>
+                    Grund der Fahrt
+                </label>
+                <select
+                    id="reasonSelect"
+                ></select>
+            </div>
+            <div>
+                <label>
+                    Gefahrene KM
+                </label>
+                <input
+                    type="number"
+                    id="kmInput"
+                    min="0"
+                    step="0.1"
+                    placeholder="z. B. 12,5"
+                >
+            </div>
+            <button
+                class="add-button"
+                onclick="addTrip()"
+            >
+                Fahrt speichern
+            </button>
+        </div>
+    </section>
+    <!-- =================================================
+         TABELLE
+    ================================================= -->
+    <section class="table-card">
+        <div class="table-header">
+            <h2>
+                📋 Fahrten
+            </h2>
+            <div class="actions">
+                <button
+                    class="secondary-button"
+                    onclick="exportCSV()"
+                >
+                    📊 Excel
+                </button>
+                <button
+                    class="secondary-button"
+                    onclick="printYear()"
+                >
+                    🖨️ Drucken
+                </button>
+                <button
+                    class="secondary-button danger-button"
+                    onclick="deleteAllTrips()"
+                >
+                    🗑️ Alles löschen
+                </button>
+            </div>
+        </div>
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>
+                            Datum
+                        </th>
+                        <th>
+                            Abfahrtsort
+                        </th>
+                        <th>
+                            Ankunftsort
+                        </th>
+                        <th>
+                            Grund
+                        </th>
+                        <th>
+                            KM
+                        </th>
+                        <th>
+                            Kosten
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody
+                    id="tripTableBody"
+                ></tbody>
+            </table>
+        </div>
+    </section>
+    <!-- =================================================
+         BACKUP
+    ================================================= -->
+    <section class="tools-card">
+        <h2>
+            💾 Daten sichern
+        </h2>
+        <p>
+            Am besten regelmäßig ein Backup herunterladen.
+            So gehen die Fahrten auch dann nicht verloren,
+            wenn das Handy kaputtgeht oder der Browser gelöscht wird.
+        </p>
+        <div class="tool-grid">
+            <button
+                class="tool-button"
+                onclick="downloadBackup()"
+            >
+                ☁️ Backup herunterladen
+                <br>
+                <small>
+                    Alle Jahre + Einstellungen sichern
+                </small>
+            </button>
+            <button
+                class="tool-button"
+                onclick="document.getElementById('backupInput').click()"
+            >
+                📥 Backup wiederherstellen
+                <br>
+                <small>
+                    Gespeicherte JSON-Datei importieren
+                </small>
+            </button>
+            <button
+                class="tool-button"
+                onclick="exportCSV()"
+            >
+                📊 Excel-Datei erstellen
+                <br>
+                <small>
+                    Aktuell ausgewähltes Jahr / Filter
+                </small>
+            </button>
+            <button
+                class="tool-button"
+                onclick="printYear()"
+            >
+                🖨️ Jahresübersicht drucken
+                <br>
+                <small>
+                    Saubere Übersicht für Unterlagen
+                </small>
+            </button>
+        </div>
+        <input
+            type="file"
+            id="backupInput"
+            accept=".json,application/json"
+            class="hidden"
+            onchange="restoreBackup(event)"
+        >
+    </section>
+    <!-- =================================================
+         EINSTELLUNGEN
+    ================================================= -->
+    <section class="settings">
+        <h2>
+            ⚙️ Auswahlmöglichkeiten
+        </h2>
+        <p>
+            Orte und Fahrtgründe kannst du hier selbst verwalten.
+        </p>
+        <div class="dropdown-editor">
+            <!-- ORTE -->
+            <div class="editor-box">
+                <h3>
+                    📍 Orte
+                </h3>
+                <div
+                    class="option-list"
+                    id="placesList"
+                ></div>
+                <div class="add-option">
+                    <input
+                        type="text"
+                        id="newPlace"
+                        placeholder="Neuen Ort hinzufügen"
+                    >
+                    <button
+                        onclick="addPlace()"
+                    >
+                        +
+                    </button>
+                </div>
+            </div>
+            <!-- GRÜNDE -->
+            <div class="editor-box">
+                <h3>
+                    🚗 Fahrtgründe
+                </h3>
+                <div
+                    class="option-list"
+                    id="reasonsList"
+                ></div>
+                <div class="add-option">
+                    <input
+                        type="text"
+                        id="newReason"
+                        placeholder="Neuen Grund hinzufügen"
+                    >
+                    <button
+                        onclick="addReason()"
+                    >
+                        +
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div class="footer-note">
+        💾 Die Daten werden automatisch auf diesem Gerät gespeichert.
+        Bitte trotzdem regelmäßig ein Backup machen.
+    </div>
+</div>
+<!-- =====================================================
+     POPUP CONTAINER
+===================================================== -->
+<div
+    id="motivationContainer"
+></div>
+<script>
+/* =====================================================
+   STANDARDWERTE
+===================================================== */
+const DEFAULT_PLACES = [
+    "Zuhause",
+    "Arzt",
+    "Krankenhaus",
+    "Friseur",
+    "Apotheke",
+    "Supermarkt"
+];
+const DEFAULT_REASONS = [
+    "Arzttermin",
+    "Krankenhaus",
+    "Friseur",
+    "Apotheke",
+    "Einkaufen",
+    "Sonstiges"
+];
+/* =====================================================
+   DATEN
+===================================================== */
+let places =
+    JSON.parse(
+        localStorage.getItem("omaPlaces")
+    ) || DEFAULT_PLACES;
+let reasons =
+    JSON.parse(
+        localStorage.getItem("omaReasons")
+    ) || DEFAULT_REASONS;
+/*
+    Die Fahrten werden jetzt nach Jahr gespeichert.
+    Beispiel:
+    {
+        "2026": [...],
+        "2027": [...]
+    }
+*/
+let allTrips =
+    JSON.parse(
+        localStorage.getItem("omaTripsByYear")
+    ) || {};
+/*
+    Falls noch Daten aus der alten Version
+    vorhanden sind, werden diese automatisch
+    übernommen.
+*/
+const oldTrips =
+    JSON.parse(
+        localStorage.getItem("omaTrips")
+    ) || [];
+if (
+    oldTrips.length > 0 &&
+    Object.keys(allTrips).length === 0
+) {
+    const currentYear =
+        new Date().getFullYear();
+    allTrips[currentYear] =
+        oldTrips;
+    saveAllTrips();
+}
+/* =====================================================
+   JAHR
+===================================================== */
+let selectedYear =
+    Number(
+        localStorage.getItem("omaSelectedYear")
+    ) ||
+    new Date().getFullYear();
+function getTripsForYear(year) {
+    return allTrips[year] || [];
+}
+function getCurrentTrips() {
+    return getTripsForYear(
+        selectedYear
+    );
+}
+function saveAllTrips() {
+    localStorage.setItem(
+        "omaTripsByYear",
+        JSON.stringify(allTrips)
+    );
+}
+/* =====================================================
+   LEVEL
+===================================================== */
+const levels = [
+    {
+        level: 1,
+        name: "Oma-Fahranfängerin",
+        emoji: "🌱",
+        required: 0
+    },
+    {
+        level: 2,
+        name: "Pflege-Azubi",
+        emoji: "🚗",
+        required: 5
+    },
+    {
+        level: 3,
+        name: "Oma-Chauffeuse",
+        emoji: "💅",
+        required: 10
+    },
+    {
+        level: 4,
+        name: "Pflege-Profi",
+        emoji: "🏆",
+        required: 20
+    },
+    {
+        level: 5,
+        name: "Oma-Fahrdienstleitung",
+        emoji: "👑",
+        required: 35
+    },
+    {
+        level: 6,
+        name: "Pflegelegende",
+        emoji: "🔥",
+        required: 50
+    },
+    {
+        level: 7,
+        name: "Schwiegertochter Supreme",
+        emoji: "💎",
+        required: 75
+    },
+    {
+        level: 8,
+        name: "Oma-Schutzpatronin",
+        emoji: "🦸‍♀️",
+        required: 100
+    },
+    {
+        level: 9,
+        name: "Pflege-Endgegnerin",
+        emoji: "⚡",
+        required: 150
+    },
+    {
+        level: 10,
+        name: "Unangefochtene Oma-Legende",
+        emoji: "👑",
+        required: 250
+    }
+];
+/* =====================================================
+   MOTIVATION
+===================================================== */
+const motivationMessages = [
+    ["🎉", "Yeey! Eine Fahrt abgeschlossen!"],
+    ["👑", "Einfach beste Schwiegertochter EU-West."],
+    ["🚗", "Kilometer gesammelt. Oma-Level +1!"],
+    ["💅", "Pflegeorganisation? Läuft bei dir."],
+    ["🏆", "Und wieder eine Fahrt von der To-do-Liste geprügelt."],
+    ["💖", "Oma sagt vielleicht nichts, aber wir sehen deine Arbeit."],
+    ["🫡", "Auftrag ausgeführt. Stabil."],
+    ["⭐", "Eine weitere Heldentat dokumentiert!"],
+    ["📋", "Bürokratie besiegt. Zumindest für heute."],
+    ["🚀", "BOOM. Fahrt eingetragen. Nächste!"],
+    ["💰", "0,30 € × KM = Steuer-Voodoo erfolgreich dokumentiert."],
+    ["🧓❤️", "Oma-Fahrdienst deluxe – Premium-Service."],
+    ["🎀", "Sehr fleißig. Dafür gibt's einen imaginären Orden."],
+    ["🥳", "Das Finanzamt wird diese Ordnung lieben."],
+    ["🦸‍♀️", "Super-Schwiegertochter im Einsatz!"],
+    ["✨", "Eine Fahrt weniger im Kopf. Herrlich."],
+    ["🔥", "Läuft! Du bist heute offiziell nicht aufzuhalten."],
+    ["🧠", "Und genau deshalb hast du diese App."],
+    ["🏅", "Fahrtenbuch-Profi. Goldmedaille geht raus."],
+    ["😎", "Eintragen, abhaken, weitermachen. Läuft."],
+    ["💪", "Stark! Wieder ein bisschen Steuerchaos verhindert."],
+    ["🌸", "Oma-Fahrdienst: 5 Sterne, würde wieder buchen."],
+    ["📈", "Die Statistik wächst. Dein Ruhm auch."],
+    ["👩‍🚒", "Pflege-Feuerwehr erfolgreich ausgerückt."],
+    ["🍾", "Fahrt gespeichert! Das verdient eigentlich einen Sekt."],
+    ["🧾", "Eine weitere Quittung für deine Großartigkeit."],
+    ["🛞", "Die Reifen drehen, die Bürokratie weint."],
+    ["📚", "Dokumentation? Vorbildlich. 10/10."],
+    ["🫶", "Liebe ist manchmal auch 17,4 km Autofahrt."],
+    ["🥇", "Du hast gerade wieder Pflegegeschichte geschrieben."]
+];
+/* =====================================================
+   INITIALISIERUNG
+===================================================== */
+document.addEventListener(
+    "DOMContentLoaded",
+    function() {
+        loadTheme();
+        renderYearSelect();
+        renderDropdowns();
+        renderSettings();
+        renderTrips();
+        updateLevel();
+        registerServiceWorker();
+    }
+);
+/* =====================================================
+   JAHR AUSWÄHLEN
+===================================================== */
+function renderYearSelect() {
+    const select =
+        document.getElementById(
+            "yearSelect"
+        );
+    const currentYear =
+        new Date().getFullYear();
+    const years =
+        new Set();
+    /*
+        Die letzten Jahre und zukünftige Jahre
+        werden angeboten.
+    */
+    for (
+        let year = currentYear - 3;
+        year <= currentYear + 3;
+        year++
+    ) {
+        years.add(year);
+    }
+    Object.keys(allTrips).forEach(
+        year => years.add(
+            Number(year)
+        )
+    );
+    select.innerHTML = "";
+    [...years]
+        .sort(
+            (a,b) => b-a
+        )
+        .forEach(
+            year => {
+                select.innerHTML += `
+                    <option
+                        value="${year}"
+                        ${year === selectedYear ? "selected" : ""}
+                    >
+                        ${year}
+                    </option>
+                `;
+            }
+        );
+}
+function changeYear() {
+    selectedYear =
+        Number(
+            document.getElementById(
+                "yearSelect"
+            ).value
+        );
+    localStorage.setItem(
+        "omaSelectedYear",
+        selectedYear
+    );
+    document.getElementById(
+        "monthSelect"
+    ).value = "all";
+    renderTrips();
+    updateLevel();
+}
+/* =====================================================
+   DROPDOWNS
+===================================================== */
+function renderDropdowns() {
+    const from =
+        document.getElementById(
+            "fromSelect"
+        );
+    const to =
+        document.getElementById(
+            "toSelect"
+        );
+    const reason =
+        document.getElementById(
+            "reasonSelect"
+        );
+    from.innerHTML = "";
+    to.innerHTML = "";
+    reason.innerHTML = "";
+    places.forEach(
+        place => {
+            from.innerHTML += `
+                <option value="${escapeHTML(place)}">
+                    ${escapeHTML(place)}
+                </option>
+            `;
+            to.innerHTML += `
+                <option value="${escapeHTML(place)}">
+                    ${escapeHTML(place)}
+                </option>
+            `;
+        }
+    );
+    reasons.forEach(
+        item => {
+            reason.innerHTML += `
+                <option value="${escapeHTML(item)}">
+                    ${escapeHTML(item)}
+                </option>
+            `;
+        }
+    );
+}
+/* =====================================================
+   FAHRT HINZUFÜGEN
+===================================================== */
+function addTrip() {
+    const from =
+        document.getElementById(
+            "fromSelect"
+        ).value;
+    const to =
+        document.getElementById(
+            "toSelect"
+        ).value;
+    const reason =
+        document.getElementById(
+            "reasonSelect"
+        ).value;
+    const kmInput =
+        document.getElementById(
+            "kmInput"
+        );
+    const km =
+        parseFloat(
+            kmInput.value.replace(
+                ",",
+                "."
+            )
+        );
+    if (!from || !to || !reason) {
+        alert(
+            "Bitte alle Felder ausfüllen."
+        );
+        return;
+    }
+    if (
+        isNaN(km) ||
+        km <= 0
+    ) {
+        alert(
+            "Bitte eine gültige Kilometerzahl eingeben."
+        );
+        kmInput.focus();
+        return;
+    }
+    const trips =
+        getCurrentTrips();
+    const oldLevel =
+        getCurrentLevel(
+            trips.length
+        );
+    const now =
+        new Date();
+    const trip = {
+        id:
+            Date.now(),
+        date:
+            now.toLocaleDateString(
+                "de-DE"
+            ),
+        isoDate:
+            now.toISOString(),
+        year:
+            selectedYear,
+        from,
+        to,
+        reason,
+        km,
+        cost:
+            km * 0.30
+    };
+    /*
+        Sicherheitshalber ein Array erzeugen.
+    */
+    if (
+        !Array.isArray(
+            allTrips[selectedYear]
+        )
+    ) {
+        allTrips[selectedYear] = [];
+    }
+    allTrips[selectedYear].push(
+        trip
+    );
+    saveAllTrips();
+    renderTrips();
+    renderYearSelect();
+    kmInput.value = "";
+    kmInput.focus();
+    showMotivation();
+    const newLevel =
+        getCurrentLevel(
+            getCurrentTrips().length
+        );
+    if (
+        newLevel.level >
+        oldLevel.level
+    ) {
+        setTimeout(
+            () => showLevelUp(
+                newLevel
+            ),
+            500
+        );
+    }
+    updateLevel();
+}
+/* =====================================================
+   LEVEL
+===================================================== */
+function getCurrentLevel(count) {
+    let current =
+        levels[0];
+    levels.forEach(
+        level => {
+            if (
+                count >=
+                level.required
+            ) {
+                current = level;
+            }
+        }
+    );
+    return current;
+}
+function getNextLevel(count) {
+    return levels.find(
+        level =>
+            level.required >
+            count
+    );
+}
+function updateLevel() {
+    const count =
+        getCurrentTrips().length;
+    const current =
+        getCurrentLevel(
+            count
+        );
+    const next =
+        getNextLevel(
+            count
+        );
+    document.getElementById(
+        "levelEmoji"
+    ).textContent =
+        current.emoji;
+    document.getElementById(
+        "levelName"
+    ).textContent =
+        current.name;
+    document.getElementById(
+        "levelNumber"
+    ).textContent =
+        "Level " +
+        current.level;
+    if (!next) {
+        document.getElementById(
+            "progressFill"
+        ).style.width =
+            "100%";
+        document.getElementById(
+            "progressText"
+        ).textContent =
+            "Maximales Level erreicht!";
+        document.getElementById(
+            "progressPercent"
+        ).textContent =
+            "100 %";
+        document.getElementById(
+            "nextLevelText"
+        ).textContent =
+            "🏆 Du bist eine Legende.";
+        return;
+    }
+    const progress =
+        (
+            (count - current.required)
+            /
+            (next.required - current.required)
+        ) * 100;
+    const safe =
+        Math.max(
+            0,
+            Math.min(
+                100,
+                progress
+            )
+        );
+    document.getElementById(
+        "progressFill"
+    ).style.width =
+        safe + "%";
+    document.getElementById(
+        "progressText"
+    ).textContent =
+        count +
+        " / " +
+        next.required +
+        " Fahrten";
+    document.getElementById(
+        "progressPercent"
+    ).textContent =
+        Math.round(
+            safe
+        ) +
+        " %";
+    const remaining =
+        next.required -
+        count;
+    document.getElementById(
+        "nextLevelText"
+    ).innerHTML = `
+        Noch
+        <strong style="color:var(--primary)">
+            ${remaining}
+        </strong>
+        Fahrt${remaining === 1 ? "" : "en"}
+        bis<br>
+        <strong style="color:var(--primary)">
+            ${next.emoji}
+            ${next.name}
+        </strong>
+    `;
+}
+/* =====================================================
+   MOTIVATION
+===================================================== */
+function showMotivation() {
+    const container =
+        document.getElementById(
+            "motivationContainer"
+        );
+    const random =
+        motivationMessages[
+            Math.floor(
+                Math.random() *
+                motivationMessages.length
+            )
+        ];
+    const popup =
+        document.createElement(
+            "div"
+        );
+    popup.className =
+        "motivation-popup";
+    popup.innerHTML = `
+        <span class="emoji">
+            ${random[0]}
+        </span>
+        ${random[1]}
+    `;
+    popup.style.left =
+        (
+            10 +
+            Math.random() * 70
+        ) + "%";
+    popup.style.top =
+        (
+            10 +
+            Math.random() * 65
+        ) + "%";
+    container.appendChild(
+        popup
+    );
+    setTimeout(
+        () => popup.remove(),
+        4500
+    );
+}
+/* =====================================================
+   LEVEL-UP
+===================================================== */
+function showLevelUp(level) {
+    const popup =
+        document.createElement(
+            "div"
+        );
+    popup.className =
+        "level-up-popup";
+    popup.innerHTML = `
+        <div class="level-up-box">
+            <div class="big-emoji">
+                ${level.emoji}
+            </div>
+            <h2>
+                LEVEL UP!
+            </h2>
+            <p>
+                Du hast Level
+                ${level.level}
+                erreicht!
+                <br><br>
+                Ab sofort bist du offiziell:
+                <br><br>
+                <strong
+                    style="
+                    color:var(--primary);
+                    font-size:20px;
+                    "
+                >
+                    ${level.name}
+                </strong>
+            </p>
+            <button
+                class="level-up-close"
+                onclick="this.closest('.level-up-popup').remove()"
+            >
+                Weiter so! 🚗
+            </button>
+        </div>
+    `;
+    popup.addEventListener(
+        "click",
+        event => {
+            if (
+                event.target === popup
+            ) {
+                popup.remove();
+            }
+        }
+    );
+    document.body.appendChild(
+        popup
+    );
+}
+/* =====================================================
+   TABELLE
+===================================================== */
+function renderTrips() {
+    const tbody =
+        document.getElementById(
+            "tripTableBody"
+        );
+    tbody.innerHTML = "";
+    const all =
+        getCurrentTrips();
+    const month =
+        document.getElementById(
+            "monthSelect"
+        ).value;
+    let filtered =
+        all;
+    if (
+        month !== "all"
+    ) {
+        filtered =
+            all.filter(
+                trip => {
+                    const date =
+                        new Date(
+                            trip.isoDate
+                        );
+                    return (
+                        date.getMonth()
+                        ===
+                        Number(month)
+                    );
+                }
+            );
+    }
+    /*
+        Neueste Fahrt zuerst.
+    */
+    filtered =
+        [...filtered].reverse();
+    if (
+        filtered.length === 0
+    ) {
+        tbody.innerHTML = `
+            <tr>
+                <td
+                    colspan="7"
+                    class="empty"
+                >
+                    ${
+                        month === "all"
+                        ? `Für ${selectedYear} gibt es noch keine Fahrten.`
+                        : "Für diesen Monat gibt es keine Fahrten."
+                    }
+                </td>
+            </tr>
+        `;
+    } else {
+        filtered.forEach(
+            trip => {
+                const row =
+                    document.createElement(
+                        "tr"
+                    );
+                row.innerHTML = `
+                    <td>
+                        ${escapeHTML(trip.date)}
+                    </td>
+                    <td>
+                        ${escapeHTML(trip.from)}
+                    </td>
+                    <td>
+                        ${escapeHTML(trip.to)}
+                    </td>
+                    <td>
+                        ${escapeHTML(trip.reason)}
+                    </td>
+                    <td>
+                        ${formatNumber(trip.km)}
+                        km
+                    </td>
+                    <td>
+                        <strong>
+                            ${formatCurrency(trip.cost)}
+                        </strong>
+                    </td>
+                    <td>
+                        <button
+                            class="delete-btn"
+                            onclick="deleteTrip(${trip.id})"
+                            title="Fahrt löschen"
+                        >
+                            ×
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(
+                    row
+                );
+            }
+        );
+    }
+    updateSummary(
+        filtered
+    );
+    updatePrintTitle();
+}
+/* =====================================================
+   SUMMARY
+===================================================== */
+function updateSummary(trips) {
+    const totalKm =
+        trips.reduce(
+            (sum, trip) =>
+                sum +
+                Number(trip.km),
+            0
+        );
+    const totalCost =
+        trips.reduce(
+            (sum, trip) =>
+                sum +
+                Number(trip.cost),
+            0
+        );
+    const average =
+        trips.length
+        ? totalKm / trips.length
+        : 0;
+    document.getElementById(
+        "totalTrips"
+    ).textContent =
+        trips.length;
+    document.getElementById(
+        "totalKm"
+    ).textContent =
+        formatNumber(
+            totalKm
+        ) +
+        " km";
+    document.getElementById(
+        "totalCost"
+    ).textContent =
+        formatCurrency(
+            totalCost
+        );
+    document.getElementById(
+        "averageKm"
+    ).textContent =
+        formatNumber(
+            average
+        ) +
+        " km";
+}
+/* =====================================================
+   FAHRT LÖSCHEN
+===================================================== */
+function deleteTrip(id) {
+    if (
+        !confirm(
+            "Diese Fahrt wirklich löschen?"
+        )
+    ) {
+        return;
+    }
+    allTrips[selectedYear] =
+        getCurrentTrips().filter(
+            trip =>
+                trip.id !== id
+        );
+    saveAllTrips();
+    renderTrips();
+}
+/* =====================================================
+   ALLE FAHRTEN DES AUSGEWÄHLTEN JAHRES LÖSCHEN
+===================================================== */
+function deleteAllTrips() {
+    const count =
+        getCurrentTrips().length;
+    if (!count) {
+        alert(
+            "Für dieses Jahr gibt es keine Fahrten."
+        );
+        return;
+    }
+    const confirmation =
+        confirm(
+            `Wirklich alle ${count} Fahrten aus ${selectedYear} löschen?`
+        );
+    if (!confirmation) {
+        return;
+    }
+    delete allTrips[selectedYear];
+    saveAllTrips();
+    renderTrips();
+}
+/* =====================================================
+   EXCEL / CSV
+===================================================== */
+function exportCSV() {
+    const trips =
+        getFilteredTrips();
+    if (!trips.length) {
+        alert(
+            "Es gibt für die aktuelle Auswahl keine Fahrten zum Exportieren."
+        );
+        return;
+    }
+    const month =
+        document.getElementById(
+            "monthSelect"
+        ).value;
+    const monthName =
+        month === "all"
+        ? "Gesamtjahr"
+        : document.getElementById(
+            "monthSelect"
+          ).selectedOptions[0].textContent;
+    let csv =
+        "Oma-Fahrtenbuch\n";
+    csv +=
+        `Jahr;${selectedYear}\n`;
+    csv +=
+        `Zeitraum;${monthName}\n\n`;
+    csv +=
+        "Datum;Abfahrtsort;Ankunftsort;Grund der Fahrt;Gefahrene KM;Kosten (€)\n";
+    trips.forEach(
+        trip => {
+            csv += [
+                trip.date,
+                trip.from,
+                trip.to,
+                trip.reason,
+                String(
+                    trip.km
+                ).replace(
+                    ".",
+                    ","
+                ),
+                Number(
+                    trip.cost
+                )
+                .toFixed(2)
+                .replace(
+                    ".",
+                    ","
+                )
+            ]
+            .map(
+                value =>
+                    `"${String(value)
+                        .replace(
+                            /"/g,
+                            '""'
+                        )}"`
+            )
+            .join(";");
+            csv += "\n";
+        }
+    );
+    const totalKm =
+        trips.reduce(
+            (sum, trip) =>
+                sum +
+                Number(trip.km),
+            0
+        );
+    const totalCost =
+        trips.reduce(
+            (sum, trip) =>
+                sum +
+                Number(trip.cost),
+            0
+        );
+    csv += "\n";
+    csv +=
+        `"GESAMT";;;;${String(totalKm).replace(".", ",")};${totalCost.toFixed(2).replace(".", ",")}`;
+    const blob =
+        new Blob(
+            [
+                "\uFEFF" +
+                csv
+            ],
+            {
+                type:
+                    "text/csv;charset=utf-8;"
+            }
+        );
+    const url =
+        URL.createObjectURL(
+            blob
+        );
+    const link =
+        document.createElement(
+            "a"
+        );
+    link.href =
+        url;
+    link.download =
+        `Oma-Fahrtenbuch-${selectedYear}-${monthName}.csv`;
+    document.body.appendChild(
+        link
+    );
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(
+        url
+    );
+}
+/* =====================================================
+   FILTERDATEN
+===================================================== */
+function getFilteredTrips() {
+    const all =
+        getCurrentTrips();
+    const month =
+        document.getElementById(
+            "monthSelect"
+        ).value;
+    if (
+        month === "all"
+    ) {
+        return all;
+    }
+    return all.filter(
+        trip => {
+            return (
+                new Date(
+                    trip.isoDate
+                ).getMonth()
+                ===
+                Number(month)
+            );
+        }
+    );
+}
+/* =====================================================
+   DRUCKEN
+===================================================== */
+function updatePrintTitle() {
+    const month =
+        document.getElementById(
+            "monthSelect"
+        ).value;
+    const monthName =
+        month === "all"
+        ? "Gesamtjahr"
+        : document.getElementById(
+            "monthSelect"
+          ).selectedOptions[0].textContent;
+    document.getElementById(
+        "printTitle"
+    ).textContent =
+        `Oma-Fahrtenbuch ${selectedYear} – ${monthName}`;
+}
+function printYear() {
+    updatePrintTitle();
+    window.print();
+}
+/* =====================================================
+   BACKUP HERUNTERLADEN
+===================================================== */
+function downloadBackup() {
+    const backup = {
+        app:
+            "Oma-Fahrtenbuch",
+        version:
+            2,
+        created:
+            new Date().toISOString(),
+        selectedYear,
+        places,
+        reasons,
+        trips:
+            allTrips
+    };
+    const json =
+        JSON.stringify(
+            backup,
+            null,
+            2
+        );
+    const blob =
+        new Blob(
+            [json],
+            {
+                type:
+                    "application/json"
+            }
+        );
+    const url =
+        URL.createObjectURL(
+            blob
+        );
+    const link =
+        document.createElement(
+            "a"
+        );
+    link.href =
+        url;
+    link.download =
+        `Oma-Fahrtenbuch-Backup-${new Date().toISOString().slice(0,10)}.json`;
+    document.body.appendChild(
+        link
+    );
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(
+        url
+    );
+    showSimpleNotice(
+        "💾 Backup gespeichert!"
+    );
+}
+/* =====================================================
+   BACKUP WIEDERHERSTELLEN
+===================================================== */
+function restoreBackup(event) {
+    const file =
+        event.target.files[0];
+    if (!file) {
+        return;
+    }
+    const reader =
+        new FileReader();
+    reader.onload =
+        function(e) {
+            try {
+                const backup =
+                    JSON.parse(
+                        e.target.result
+                    );
+                /*
+                    Sicherheitsprüfung.
+                */
+                if (
+                    backup.app !==
+                    "Oma-Fahrtenbuch"
+                ) {
+                    throw new Error(
+                        "Keine gültige Oma-Fahrtenbuch-Datei."
+                    );
+                }
+                if (
+                    !backup.trips ||
+                    typeof backup.trips !== "object"
+                ) {
+                    throw new Error(
+                        "Die Backup-Datei enthält keine gültigen Fahrtdaten."
+                    );
+                }
+                const confirmation =
+                    confirm(
+                        "Backup einspielen?\n\n" +
+                        "Die aktuell gespeicherten Daten werden durch die Daten aus dem Backup ersetzt."
+                    );
+                if (!confirmation) {
+                    event.target.value = "";
+                    return;
+                }
+                allTrips =
+                    backup.trips;
+                if (
+                    Array.isArray(
+                        backup.places
+                    )
+                ) {
+                    places =
+                        backup.places;
+                }
+                if (
+                    Array.isArray(
+                        backup.reasons
+                    )
+                ) {
+                    reasons =
+                        backup.reasons;
+                }
+                if (
+                    backup.selectedYear
+                ) {
+                    selectedYear =
+                        Number(
+                            backup.selectedYear
+                        );
+                }
+                saveAllTrips();
+                localStorage.setItem(
+                    "omaPlaces",
+                    JSON.stringify(
+                        places
+                    )
+                );
+                localStorage.setItem(
+                    "omaReasons",
+                    JSON.stringify(
+                        reasons
+                    )
+                );
+                localStorage.setItem(
+                    "omaSelectedYear",
+                    selectedYear
+                );
+                renderYearSelect();
+                renderDropdowns();
+                renderSettings();
+                renderTrips();
+                updateLevel();
+                alert(
+                    "✅ Backup erfolgreich wiederhergestellt!"
+                );
+            } catch(error) {
+                alert(
+                    "❌ Das Backup konnte nicht gelesen werden.\n\n" +
+                    error.message
+                );
+            }
+            event.target.value = "";
+        };
+    reader.readAsText(
+        file
+    );
+}
+/* =====================================================
+   AUSWAHL-MÖGLICHKEITEN
+===================================================== */
+function addPlace() {
+    const input =
+        document.getElementById(
+            "newPlace"
+        );
+    const value =
+        input.value.trim();
+    if (!value) {
+        return;
+    }
+    if (
+        places.includes(value)
+    ) {
+        alert(
+            "Dieser Ort ist bereits vorhanden."
+        );
+        return;
+    }
+    places.push(
+        value
+    );
+    saveSettings();
+    renderDropdowns();
+    renderSettings();
+    input.value = "";
+}
+function removePlace(index) {
+    if (
+        !confirm(
+            `„${places[index]}“ aus der Liste entfernen?`
+        )
+    ) {
+        return;
+    }
+    places.splice(
+        index,
+        1
+    );
+    saveSettings();
+    renderDropdowns();
+    renderSettings();
+}
+function addReason() {
+    const input =
+        document.getElementById(
+            "newReason"
+        );
+    const value =
+        input.value.trim();
+    if (!value) {
+        return;
+    }
+    if (
+        reasons.includes(value)
+    ) {
+        alert(
+            "Dieser Grund ist bereits vorhanden."
+        );
+        return;
+    }
+    reasons.push(
+        value
+    );
+    saveSettings();
+    renderDropdowns();
+    renderSettings();
+    input.value = "";
+}
+function removeReason(index) {
+    if (
+        !confirm(
+            `„${reasons[index]}“ aus der Liste entfernen?`
+        )
+    ) {
+        return;
+    }
+    reasons.splice(
+        index,
+        1
+    );
+    saveSettings();
+    renderDropdowns();
+    renderSettings();
+}
+function saveSettings() {
+    localStorage.setItem(
+        "omaPlaces",
+        JSON.stringify(
+            places
+        )
+    );
+    localStorage.setItem(
+        "omaReasons",
+        JSON.stringify(
+            reasons
+        )
+    );
+}
+/* =====================================================
+   SETTINGS RENDERN
+===================================================== */
+function renderSettings() {
+    const placesList =
+        document.getElementById(
+            "placesList"
+        );
+    const reasonsList =
+        document.getElementById(
+            "reasonsList"
+        );
+    placesList.innerHTML =
+        "";
+    places.forEach(
+        (place, index) => {
+            placesList.innerHTML += `
+                <div class="option-item">
+                    <span>
+                        ${escapeHTML(place)}
+                    </span>
+                    <button
+                        class="remove-option"
+                        onclick="removePlace(${index})"
+                    >
+                        ×
+                    </button>
+                </div>
+            `;
+        }
+    );
+    reasonsList.innerHTML =
+        "";
+    reasons.forEach(
+        (reason, index) => {
+            reasonsList.innerHTML += `
+                <div class="option-item">
+                    <span>
+                        ${escapeHTML(reason)}
+                    </span>
+                    <button
+                        class="remove-option"
+                        onclick="removeReason(${index})"
+                    >
+                        ×
+                    </button>
+                </div>
+            `;
+        }
+    );
+}
+/* =====================================================
+   THEME
+===================================================== */
+function toggleTheme() {
+    document.body.classList.toggle(
+        "dark"
+    );
+    const dark =
+        document.body.classList.contains(
+            "dark"
+        );
+    localStorage.setItem(
+        "omaTheme",
+        dark
+            ? "dark"
+            : "light"
+    );
+    updateThemeButton();
+}
+function loadTheme() {
+    if (
+        localStorage.getItem(
+            "omaTheme"
+        ) === "dark"
+    ) {
+        document.body.classList.add(
+            "dark"
+        );
+    }
+    updateThemeButton();
+}
+function updateThemeButton() {
+    document.getElementById(
+        "themeButton"
+    ).textContent =
+        document.body.classList.contains(
+            "dark"
+        )
+        ? "☀️ Hell"
+        : "🌙 Dunkel";
+}
+/* =====================================================
+   PWA / APP INSTALLATION
+===================================================== */
+let deferredInstallPrompt = null;
+window.addEventListener(
+    "beforeinstallprompt",
+    event => {
+        event.preventDefault();
+        deferredInstallPrompt =
+            event;
+        document.getElementById(
+            "installButton"
+        ).classList.remove(
+            "hidden"
+        );
+    }
+);
+async function installApp() {
+    if (!deferredInstallPrompt) {
+        alert(
+            "Die App kann über das Browser-Menü zum Home-Bildschirm hinzugefügt werden."
+        );
+        return;
+    }
+    deferredInstallPrompt.prompt();
+    const result =
+        await deferredInstallPrompt.userChoice;
+    if (
+        result.outcome ===
+        "accepted"
+    ) {
+        document.getElementById(
+            "installButton"
+        ).classList.add(
+            "hidden"
+        );
+    }
+    deferredInstallPrompt =
+        null;
+}
+/* =====================================================
+   SERVICE WORKER
+===================================================== */
+function registerServiceWorker() {
+    if (
+        "serviceWorker" in navigator
+    ) {
+        navigator.serviceWorker
+            .register(
+                "service-worker.js"
+            )
+            .catch(
+                () => {
+                    /*
+                        Im CodePen-Modus kann dieser Fehler
+                        auftreten. Für die normale Website
+                        ist der Service Worker relevant.
+                    */
+                }
+            );
+    }
+}
+/* =====================================================
+   KLEINE INFO-NACHRICHT
+===================================================== */
+function showSimpleNotice(text) {
+    const container =
+        document.getElementById(
+            "motivationContainer"
+        );
+    const popup =
+        document.createElement(
+            "div"
+        );
+    popup.className =
+        "motivation-popup";
+    popup.innerHTML =
+        text;
+    popup.style.left =
+        "50%";
+    popup.style.top =
+        "15%";
+    popup.style.transform =
+        "translateX(-50%)";
+    container.appendChild(
+        popup
+    );
+    setTimeout(
+        () => popup.remove(),
+        4500
+    );
+}
+/* =====================================================
+   FORMATIERUNG
+===================================================== */
+function formatNumber(number) {
+    return Number(
+        number
+    ).toLocaleString(
+        "de-DE",
+        {
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 1
+        }
+    );
+}
+function formatCurrency(number) {
+    return Number(
+        number
+    ).toLocaleString(
+        "de-DE",
+        {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        }
+    ) + " €";
+}
+/* =====================================================
+   HTML ESCAPING
+===================================================== */
+function escapeHTML(value) {
+    return String(
+        value
+    )
+    .replace(
+        /&/g,
+        "&amp;"
+    )
+    .replace(
+        /</g,
+        "&lt;"
+    )
+    .replace(
+        />/g,
+        "&gt;"
+    )
+    .replace(
+        /"/g,
+        "&quot;"
+    )
+    .replace(
+        /'/g,
+        "&#039;"
+    );
+}
+</script>
+</body>
+</html>

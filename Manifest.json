@@ -1,0 +1,11 @@
+{
+  "name": "Oma-Fahrtenbuch",
+  "short_name": "Oma-Fahrtenbuch",
+  "description": "Einfaches Fahrtenbuch für Oma-Fahrten",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#fff7fb",
+  "theme_color": "#d41475",
+  "orientation": "portrait",
+  "icons": []
+}
